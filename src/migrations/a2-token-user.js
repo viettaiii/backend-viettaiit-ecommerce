@@ -11,6 +11,11 @@ module.exports = {
       },
       ip: {
         type: Sequelize.STRING,
+        allowNull: false,
+      },
+      userAgent: {
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       refreshToken: {
         type: Sequelize.STRING,
@@ -26,8 +31,8 @@ module.exports = {
           model: "Users",
           key: "id",
         },
-        onDelete:  'cascade',
-          onUpdate: 'cascade',
+        onDelete: "cascade",
+        onUpdate: "cascade",
       },
       createdAt: {
         type: Sequelize.DATE,

@@ -15,14 +15,19 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   TokenUser.init(
-    {  id: {
-      allowNull: false,
-      primaryKey: true,
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-    },
+    {
+      id: {
+        allowNull: false,
+        primaryKey: true,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+      },
       ip: {
         type: DataTypes.STRING,
+      },
+      userAgent: {
+        type: DataTypes.STRING,
+        allowNull: false,
       },
       refreshToken: {
         type: DataTypes.STRING,
