@@ -16,6 +16,9 @@ module.exports = (sequelize, DataTypes) => {
 
       // Product Item
       this.hasMany(models.ProductItem, { foreignKey: "productId" });
+
+      // Caching product detail
+      this.hasMany(models.CachingProductDetail, { foreignKey: "productId" });
     }
   }
   Product.init(
