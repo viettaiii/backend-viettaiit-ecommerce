@@ -13,6 +13,9 @@ module.exports = (sequelize, DataTypes) => {
 
       // Product
       this.hasMany(models.UserReview, { foreignKey: "productId" });
+
+      // Product Item
+      this.hasMany(models.ProductItem, { foreignKey: "productId" });
     }
   }
   Product.init(
@@ -33,7 +36,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         defaultValue: 0,
       },
-    
     },
     {
       sequelize,
