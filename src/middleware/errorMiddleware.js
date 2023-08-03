@@ -21,6 +21,9 @@ const errorMiddleware = (err, req, res, next) => {
     case 404:
       defaultError.error.statusText = "Not Found";
       break;
+    case 409:
+      defaultError.error.statusText = "Conflict";
+      break;
   }
   res.status(defaultError.status).json({
     error: defaultError.error,
