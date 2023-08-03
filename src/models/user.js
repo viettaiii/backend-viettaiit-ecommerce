@@ -18,6 +18,9 @@ module.exports = (sequelize, DataTypes) => {
 
       // Address
       this.hasOne(models.Address, { foreignKey: "userId" });
+
+      // User payment method
+      this.hasMany(models.UserPaymentMethods, { foreignKey: "userId" });
     }
   }
   User.init(
