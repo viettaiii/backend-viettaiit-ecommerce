@@ -8,9 +8,12 @@ const routerAuth = require("./routes/auth");
 
 const { notFoundMiddleware, errorMiddleware } = require("./middleware");
 const bodyParser = require("body-parser");
+var cookieParser = require('cookie-parser')
 const configViewEngine = require("./config/viewEngine");
 app.use(bodyParser.json());
 
+
+app.use(cookieParser())
 // Kết nối view engine
 configViewEngine(app);
 // Kết tối đến các tuyển đường
