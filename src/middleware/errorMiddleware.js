@@ -21,9 +21,23 @@ const errorMiddleware = (err, req, res, next) => {
     case 404:
       defaultError.error.statusText = "Not Found";
       break;
+
     case 409:
       defaultError.error.statusText = "Conflict";
       break;
+    case 422:
+      defaultError.error.statusText = "Unprocessable Entity";
+      break;
+  }
+  if (err.name === "SequelizeValidationError") {
+    defaultError.error.message =
+      err.errors[0].path +
+      " có giá trị " +
+      err.errors[0].value +
+      " không hợp lệ";
+    defaultError.error.statusText = "Unprocessable Entity";
+    defaultError.error.status = StatusCodes.UNPROCESSABLE_ENTITY;
+    defaultError.status = StatusCodes.UNPROCESSABLE_ENTITY;
   }
   res.status(defaultError.status).json({
     error: defaultError.error,

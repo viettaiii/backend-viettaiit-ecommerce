@@ -39,11 +39,14 @@ module.exports = (sequelize, DataTypes) => {
       email: {
         type: DataTypes.STRING,
         allowNull: false,
-        isEmail: true,
+        validate: {
+          isEmail: true,
+        },
       },
       password: {
         type: DataTypes.STRING,
         allowNull: false,
+        min: 6,
       },
       role: {
         type: DataTypes.ENUM,
