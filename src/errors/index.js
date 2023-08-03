@@ -2,9 +2,11 @@ const NotFoundError = require("./notFoundError");
 const BadRequestError = require("./badRequestError");
 const UnauthorizedError = require("./unauthorizedError");
 const ConflictError = require("./conflictError");
+const UnprocessableEntityError = require("./unprocessableEntityError");
 module.exports = {
   NotFoundError,
   BadRequestError,
   UnauthorizedError,
-  ConflictError
+  ConflictError,
+  UnprocessableEntityError,
 };
