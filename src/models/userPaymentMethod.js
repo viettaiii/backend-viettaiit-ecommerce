@@ -13,6 +13,9 @@ module.exports = (sequelize, DataTypes) => {
 
       // User
       this.belongsTo(models.User, { foreignKey: "userId" });
+
+      // Shop Order
+      this.belongsTo(models.ShopOrder, { foreignKey: "paymentMethodId" });
     }
   }
   UserPaymentMethod.init(
