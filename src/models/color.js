@@ -12,7 +12,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Color.init(
-    {
+    {  id: {
+      allowNull: false,
+      primaryKey: true,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+    },
       value: {
         type: DataTypes.STRING,
         allowNull: false,

@@ -25,7 +25,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   ShopOrder.init(
-    {
+    {  id: {
+      allowNull: false,
+      primaryKey: true,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+    },
       orderDate: {
         type: DataTypes.DATE,
         defaultValue: new Date(),

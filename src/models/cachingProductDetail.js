@@ -13,7 +13,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   CachingProductDetail.init(
-    {
+    {  id: {
+      allowNull: false,
+      primaryKey: true,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+    },
       data: {
         type: DataTypes.STRING,
         allowNull: false,

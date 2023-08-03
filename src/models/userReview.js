@@ -16,6 +16,12 @@ module.exports = (sequelize, DataTypes) => {
   }
   UserReview.init(
     {
+      id: {
+        allowNull: false,
+        primaryKey: true,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+      },
       ratingValue: {
         type: DataTypes.INTEGER,
         defaultValue: 0,

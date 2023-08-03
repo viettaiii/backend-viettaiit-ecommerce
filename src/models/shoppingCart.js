@@ -16,7 +16,14 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   ShoppingCart.init(
-    {},
+    {
+      id: {
+        allowNull: false,
+        primaryKey: true,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+      },
+    },
     {
       sequelize,
       modelName: "ShoppingCart",

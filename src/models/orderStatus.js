@@ -13,7 +13,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   OrderStatus.init(
-    {
+    {  id: {
+      allowNull: false,
+      primaryKey: true,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+    },
       status: {
         type: DataTypes.ENUM,
         values: ["pending", "processing", "completed"],

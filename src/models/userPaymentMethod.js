@@ -19,7 +19,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   UserPaymentMethod.init(
-    {
+    {  id: {
+      allowNull: false,
+      primaryKey: true,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+    },
       provider: { type: DataTypes.STRING },
       accountNumber: { type: DataTypes.STRING },
       expireDate: { type: DataTypes.DATE },

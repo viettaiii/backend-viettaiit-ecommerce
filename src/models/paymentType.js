@@ -13,7 +13,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   PaymentType.init(
-    {
+    {  id: {
+      allowNull: false,
+      primaryKey: true,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+    },
       value: {
         type: DataTypes.ENUM,
         values: ["Cash", "CreditCard", "BankTransfer"],

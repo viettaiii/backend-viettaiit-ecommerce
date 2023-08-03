@@ -13,7 +13,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   ShippingMethod.init(
-    {
+    {  id: {
+      allowNull: false,
+      primaryKey: true,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+    },
       name: {
         type: DataTypes.ENUM,
         values: ["standard shipping", "express shipping", "pickup in store"],
