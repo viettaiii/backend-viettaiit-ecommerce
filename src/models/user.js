@@ -15,6 +15,9 @@ module.exports = (sequelize, DataTypes) => {
 
       // UserReview
       this.hasMany(models.UserReview, { foreignKey: "userId" });
+
+      // Address
+      this.hasOne(models.Address, { foreignKey: "userId" });
     }
   }
   User.init(
