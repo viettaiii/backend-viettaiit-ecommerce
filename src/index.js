@@ -3,8 +3,11 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT;
 const connectDB = require("./config/connectDB");
-app.get("/", (req, res) => {
-  res.send("Hello World!");
+
+const { User } = require("./models");
+app.get("/", async (req, res) => {
+  const user = await User.findAll();
+  res.json(user);
 });
 
 const startServer = async (app, port) => {
