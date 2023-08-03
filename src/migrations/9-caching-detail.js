@@ -19,6 +19,8 @@ module.exports = {
           model: "products",
           key: "id",
         },
+        onDelete:  'cascade',
+        onUpdate: 'cascade',
       },
       createdAt: {
         type: Sequelize.DATE,

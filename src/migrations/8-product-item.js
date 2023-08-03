@@ -32,6 +32,8 @@ module.exports = {
             model: "colors",
             key: "id",
           },
+          onDelete:  'cascade',
+          onUpdate: 'cascade',
         },
         productId: {
           type: Sequelize.UUID,
@@ -39,6 +41,8 @@ module.exports = {
             model: "products",
             key: "id",
           },
+          onDelete:  'cascade',
+          onUpdate: 'cascade',
         },
 
         createdAt: {
