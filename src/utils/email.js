@@ -17,7 +17,7 @@ const sendVerificationEmail = async ({
   verificationToken,
   origin,
 }) => {
-  const verifyEmail = `${origin}/auth/verify-email?token=${verificationToken}&email=${email}`;
+  const verifyEmail = `${origin}/account/verify-email?token=${verificationToken}&email=${email}`;
   const message = `<p>Vui lòng click vào link bên dưới để có thể xác minh email của bạn : 
     <a href="${verifyEmail}">Verify Email</a> </p>`;
   return await sendMail({
