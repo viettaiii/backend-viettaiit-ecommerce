@@ -8,9 +8,12 @@ const {
   ForBiddenError,
 } = require("../errors");
 const { StatusCodes } = require("http-status-codes");
-const { comparePassword } = require("../utils/bcrypt");
+const { comparePassword, hashPassword } = require("../utils/bcrypt");
 const { createString } = require("../utils/crypto");
-const { sendVerificationEmail } = require("../utils/email");
+const {
+  sendVerificationEmail,
+  sendResetPasswordEmail,
+} = require("../utils/email");
 const { attachCookiesToResponse } = require("../utils/jwt");
 const { createResponse } = require("../utils/createResponse");
 const register = async (req, res) => {
@@ -35,7 +38,7 @@ const register = async (req, res) => {
     message: "Tạo mới một người dùng thành công.",
     status: StatusCodes.CREATED,
   });
-  res.status(StatusCodes.CREATED).json(response);
+  res.status(response.status).json(response);
 };
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -51,7 +54,9 @@ const login = async (req, res) => {
   }
   const isMatch = await comparePassword(password, user.password);
   if (!isMatch) {
-    throw new UnauthorizedError("Không được phép!");
+    throw new UnauthorizedError(
+      "Bạn không có quyền đăng nhập vào tài khoản này."
+    );
   }
   if (!user.isVerified) {
     const origin = process.env.FRONTEND_CLIENT_URL;
@@ -99,7 +104,7 @@ const login = async (req, res) => {
       },
       refreshToken
     );
-    return res.status(StatusCodes.OK).json(response);
+    return res.status(response.status).json(response);
   }
   const refreshToken = tokenUser.refreshToken;
   attachCookiesToResponse(
@@ -111,7 +116,7 @@ const login = async (req, res) => {
     },
     refreshToken
   );
-  res.status(StatusCodes.OK).json(response);
+  res.status(response.status).json(response);
 };
 const verifyEmail = async (req, res) => {
   const { verificationToken, email } = req.body;
@@ -133,10 +138,67 @@ const verifyEmail = async (req, res) => {
     message: "Xác mình email thành công!",
     status: StatusCodes.OK,
   });
-  res.status(StatusCodes.OK).json(response);
+  res.status(response.status).json(response);
 };
-const forgotPassword = async (req, res) => {};
-const resetPassword = async (req, res) => {};
+const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    throw new BadRequestError("Vui lòng cung cấp email");
+  }
+  const user = await User.findOne({ where: { email } });
+  if (!user) {
+    throw new NotFoundError("Email này không tồn tại trên hệ thống");
+  }
+  user.passwordToken = createString();
+  user.passwordTokenExpire = new Date(Date.now() + 1000 * 60 * 1); // Thời gian hiện tại + 10 phút
+  await user.save();
+  sendResetPasswordEmail({
+    name: user.name,
+    email: user.email,
+    token: user.passwordToken,
+    origin: process.env.FRONTEND_CLIENT_URL,
+  });
+  const response = createResponse({
+    message:
+      "Kiểm tra email của bạn để đặt lại mật khẩu, hạn đắt mật khẩu sẽ hết trong 10 phút đến",
+
+    status: StatusCodes.ACCEPTED,
+  });
+  res.status(response.status).json(response);
+};
+const resetPassword = async (req, res) => {
+  const { passwordToken, email, password, confirmPassword } = req.body;
+  if (!passwordToken || !email) {
+    throw new BadRequestError("Vui lòng cung cấp đầy đủ giá trị");
+  }
+  const user = await User.findOne({ where: { email } });
+  if (!user) {
+    throw new NotFoundError("Người dùng không tồn tại trên hệ thống");
+  }
+
+  const currentDate = new Date(Date.now());
+  if (
+    !(
+      user.passwordTokenExpire > currentDate &&
+      passwordToken === user.passwordToken
+    )
+  ) {
+    throw new UnauthorizedError("Mã token đã hết hạn");
+  }
+
+  if (password !== confirmPassword) {
+    throw new BadRequestError("Mật khẩu không trùng khớp, vui lòng thử lại");
+  }
+  user.password = await hashPassword(password);
+  user.passwordToken = null;
+  user.passwordTokenExpire = null;
+  await user.save();
+  const response = createResponse({
+    message: "Đặt mật khẩu thành công",
+    status: StatusCodes.OK,
+  });
+  res.status(response.status).json(response);
+};
 const logout = async (req, res) => {
   await TokenUser.destroy({ where: { userId: req.userInfo.userId } });
   res.clearCookie("access_token");
@@ -145,7 +207,7 @@ const logout = async (req, res) => {
     message: "Đăng xuất thành công.",
     status: StatusCodes.OK,
   });
-  res.status(StatusCodes.OK).json(response);
+  res.status(response.status).json(response);
 };
 
 module.exports = {
