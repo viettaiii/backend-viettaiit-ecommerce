@@ -36,9 +36,7 @@ const errorMiddleware = (err, req, res, next) => {
     defaultError.statusText = "Unprocessable Entity";
     defaultError.status = StatusCodes.UNPROCESSABLE_ENTITY;
   }
-  res.status(defaultError.status).json({
-    message: defaultError.message,
-  });
+  res.status(defaultError.status).json(defaultError);
 };
 
 module.exports = errorMiddleware;
