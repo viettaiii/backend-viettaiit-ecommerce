@@ -29,8 +29,10 @@ const sendVerificationEmail = async ({
   });
 };
 
+
+
 const sendResetPasswordEmail = async ({ name, email, token, origin }) => {
-  const resetURL = `${origin}/user/reset-password?token=${token}&email=${email}`;
+  const resetURL = `${origin}/account/reset-password?token=${token}&email=${email}`;
   const message = `<p>Vui lòng click vào link bên dưới để có thể đặt lại mật khẩu của bạn : 
       <a href="${resetURL}">Đặt lại mặt khẩu</a></p>`;
   return await sendMail({
