@@ -15,7 +15,6 @@ module.exports = {
       },
       slug: {
         type: Sequelize.STRING,
-        allowNull: false,
       },
       description: {
         type: Sequelize.STRING,
@@ -24,6 +23,10 @@ module.exports = {
       discount: {
         type: Sequelize.INTEGER,
         defaultValue: 0,
+      },
+      price: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
       },
       categoryId: {
         type: Sequelize.UUID,

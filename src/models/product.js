@@ -22,30 +22,39 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Product.init(
-    {  id: {
-      allowNull: false,
-      primaryKey: true,
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-    },
+    {
+      id: {
+        allowNull: false,
+        primaryKey: true,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+      },
       name: {
         type: DataTypes.STRING,
         allowNull: false,
       },
       slug: {
         type: DataTypes.STRING,
-        allowNull: false,
       },
       description: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: false,
       },
       discount: {
         type: DataTypes.INTEGER,
         defaultValue: 0,
       },
+      price: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
     },
     {
+      hooks: {
+        beforeCreate: async (product, options) => {
+          product.slug = product.slug.split(" ").join("-");
+        },
+      },
       sequelize,
       modelName: "Product",
     }
