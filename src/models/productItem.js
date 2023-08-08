@@ -8,11 +8,14 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // User
-      this.belongsTo(models.User, { foreignKey: "userId" });
+      // Color
+      this.belongsTo(models.Color, { foreignKey: "colorId" });
 
       // Product
-      this.belongsTo(models.Product, { foreignKey: "productId" });
+      this.belongsTo(models.Product, {
+        foreignKey: "productId",
+        as: "productItems",
+      });
 
       // Shopping cart item
       this.hasMany(models.ShoppingCartItem, { foreignKey: "productItemId" });
@@ -29,9 +32,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
       },
-      SKU: {
-        type: DataTypes.STRING,
-      },
       qtyInStock: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -40,15 +40,11 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      price: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-      },
     },
     {
-     
       sequelize,
       modelName: "ProductItem",
+      timestamps: true,
     }
   );
   return ProductItem;

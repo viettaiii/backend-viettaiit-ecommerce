@@ -11,9 +11,6 @@ module.exports = {
           type: Sequelize.UUID,
           defaultValue: Sequelize.UUID,
         },
-        SKU: {
-          type: Sequelize.STRING,
-        },
         qtyInStock: {
           type: Sequelize.INTEGER,
           allowNull: false,
@@ -22,27 +19,25 @@ module.exports = {
           type: Sequelize.STRING,
           allowNull: false,
         },
-        price: {
-          type: Sequelize.INTEGER,
-          allowNull: false,
-        },
         colorId: {
           type: Sequelize.UUID,
           references: {
             model: "colors",
             key: "id",
-          },allowNull: false,
-          onDelete:  'cascade',
-          onUpdate: 'cascade',
+          },
+          allowNull: false,
+          onDelete: "cascade",
+          onUpdate: "cascade",
         },
         productId: {
           type: Sequelize.UUID,
           references: {
             model: "products",
             key: "id",
-          },allowNull: false,
-          onDelete:  'cascade',
-          onUpdate: 'cascade',
+          },
+          allowNull: false,
+          onDelete: "cascade",
+          onUpdate: "cascade",
         },
 
         createdAt: {

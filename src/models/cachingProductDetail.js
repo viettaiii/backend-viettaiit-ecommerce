@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "CachingProductDetail",
+      modelName: "CachingProductDetail",   timestamps: true,
     }
   );
   return CachingProductDetail;

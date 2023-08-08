@@ -15,7 +15,10 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(models.UserReview, { foreignKey: "productId" });
 
       // Product Item
-      this.hasMany(models.ProductItem, { foreignKey: "productId" });
+      this.hasMany(models.ProductItem, {
+        foreignKey: "productId",
+        as: "productItems",
+      });
 
       // Caching product detail
       this.hasMany(models.CachingProductDetail, { foreignKey: "productId" });
@@ -32,9 +35,12 @@ module.exports = (sequelize, DataTypes) => {
       name: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
       },
       slug: {
         type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
       },
       description: {
         type: DataTypes.STRING,
@@ -52,11 +58,11 @@ module.exports = (sequelize, DataTypes) => {
     {
       hooks: {
         beforeCreate: async (product, options) => {
-          product.slug = product.name.split(" ").join("-");
+          product.slug = product.name.toLowerCase().split(" ").join("-");
         },
       },
       sequelize,
-      modelName: "Product",
+      modelName: "Product",   timestamps: true,
     }
   );
   return Product;

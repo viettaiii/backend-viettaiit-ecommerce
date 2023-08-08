@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "UserPaymentMethod",
+      modelName: "UserPaymentMethod",   timestamps: true,
     }
   );
   return UserPaymentMethod;

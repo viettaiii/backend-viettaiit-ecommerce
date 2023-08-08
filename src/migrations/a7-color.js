@@ -12,10 +12,7 @@ module.exports = {
       value: {
         type: Sequelize.STRING,
         allowNull: false,
-      },
-      colorCode: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        unique: true,
       },
       createdAt: {
         type: Sequelize.DATE,

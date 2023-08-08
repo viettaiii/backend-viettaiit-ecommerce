@@ -8,28 +8,26 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // User
+      this.hasMany(models.ProductItem, { foreignKey: "colorId" });
     }
   }
   Color.init(
-    {  id: {
-      allowNull: false,
-      primaryKey: true,
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-    },
+    {
+      id: {
+        allowNull: false,
+        primaryKey: true,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+      },
       value: {
         type: DataTypes.STRING,
         allowNull: false,
-      },
-      colorCode: {
-        type: DataTypes.STRING,
-        allowNull: false,
+        unique: true,
       },
     },
     {
       sequelize,
-      modelName: "Color",
+      modelName: "Color",   timestamps: true,
     }
   );
   return Color;
