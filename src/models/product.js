@@ -52,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       hooks: {
         beforeCreate: async (product, options) => {
-          product.slug = product.slug.split(" ").join("-");
+          product.slug = product.name.split(" ").join("-");
         },
       },
       sequelize,
