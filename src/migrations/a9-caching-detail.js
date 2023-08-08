@@ -18,7 +18,7 @@ module.exports = {
         references: {
           model: "products",
           key: "id",
-        },
+        },allowNull: false,
         onDelete:  'cascade',
         onUpdate: 'cascade',
       },

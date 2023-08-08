@@ -31,7 +31,7 @@ module.exports = {
           references: {
             model: "colors",
             key: "id",
-          },
+          },allowNull: false,
           onDelete:  'cascade',
           onUpdate: 'cascade',
         },
@@ -40,7 +40,7 @@ module.exports = {
           references: {
             model: "products",
             key: "id",
-          },
+          },allowNull: false,
           onDelete:  'cascade',
           onUpdate: 'cascade',
         },

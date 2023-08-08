@@ -24,7 +24,7 @@ module.exports = {
           references: {
             model: "UserPaymentMethods",
             key: "id",
-          },
+          },allowNull: false,
           onDelete: "cascade",
           onUpdate: "cascade",
         },
@@ -33,7 +33,7 @@ module.exports = {
           references: {
             model: "addresses",
             key: "id",
-          },
+          },allowNull: false,
           onDelete: "cascade",
           onUpdate: "cascade",
         },
@@ -42,7 +42,7 @@ module.exports = {
           references: {
             model: "shippingMethods",
             key: "id",
-          },
+          },allowNull: false,
           onDelete: "cascade",
           onUpdate: "cascade",
         },
@@ -51,7 +51,7 @@ module.exports = {
           references: {
             model: "orderStatuses",
             key: "id",
-          },
+          },allowNull: false,
           onDelete: "cascade",
           onUpdate: "cascade",
         },

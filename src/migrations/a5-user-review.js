@@ -24,7 +24,7 @@ module.exports = {
           references: {
             model: "users",
             key: "id",
-          },
+          },allowNull: false,
           onDelete:  'cascade',
           onUpdate: 'cascade',
         },
@@ -33,7 +33,7 @@ module.exports = {
           references: {
             model: "products",
             key: "id",
-          },
+          },allowNull: false,
           onDelete:  'cascade',
           onUpdate: 'cascade',
         },

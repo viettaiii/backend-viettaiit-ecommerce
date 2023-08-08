@@ -21,7 +21,7 @@ module.exports = {
           references: {
             model: "shoppingCarts",
             key: "id",
-          },
+          },allowNull: false,
           onDelete: "cascade",
           onUpdate: "cascade",
         },
@@ -31,7 +31,7 @@ module.exports = {
           references: {
             model: "productItems",
             key: "id",
-          },
+          },allowNull: false,
           onDelete: "cascade",
           onUpdate: "cascade",
         },

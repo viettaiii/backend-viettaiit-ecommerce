@@ -22,12 +22,13 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   ProductItem.init(
-    {  id: {
-      allowNull: false,
-      primaryKey: true,
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-    },
+    {
+      id: {
+        allowNull: false,
+        primaryKey: true,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+      },
       SKU: {
         type: DataTypes.STRING,
       },
@@ -45,6 +46,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
+     
       sequelize,
       modelName: "ProductItem",
     }
