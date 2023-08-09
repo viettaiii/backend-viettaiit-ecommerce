@@ -36,6 +36,11 @@ const errorMiddleware = (err, req, res, next) => {
     defaultError.statusText = "Unprocessable Entity";
     defaultError.status = StatusCodes.UNPROCESSABLE_ENTITY;
   }
+  if (err.name === "SequelizeUniqueConstraintError") {
+    defaultError.message = err.errors[0].message;
+    defaultError.statusText = "Unprocessable Entity";
+    defaultError.status = StatusCodes.UNPROCESSABLE_ENTITY;
+  }
   res.status(defaultError.status).json(defaultError);
 };
 
