@@ -24,18 +24,22 @@ module.exports = {
           references: {
             model: "users",
             key: "id",
-          },allowNull: false,
-          onDelete:  'cascade',
-          onUpdate: 'cascade',
+          },
+          allowNull: false,
+          unique: "unique_tag",
+          onDelete: "cascade",
+          onUpdate: "cascade",
         },
         productId: {
           type: Sequelize.UUID,
           references: {
             model: "products",
             key: "id",
-          },allowNull: false,
-          onDelete:  'cascade',
-          onUpdate: 'cascade',
+          },
+          allowNull: false,
+          unique: "unique_tag",
+          onDelete: "cascade",
+          onUpdate: "cascade",
         },
         createdAt: {
           type: Sequelize.DATE,
@@ -45,12 +49,12 @@ module.exports = {
         },
       },
       {
-        indexes: [
-          {
-            unique: true,
+        uniqueKeys: {
+          unique_tag: {
+            customIndex: true,
             fields: ["userId", "productId"],
           },
-        ],
+        },
       }
     );
   },

@@ -19,6 +19,7 @@ module.exports = {
           type: Sequelize.UUID,
           allowNull: false,
           references: { model: "users", key: "id" },
+          unique: "unique_tag",
           onDelete: "cascade",
           onUpdate: "cascade",
         },
@@ -26,6 +27,7 @@ module.exports = {
           type: Sequelize.UUID,
           allowNull: false,
           references: { model: "paymentTypes", key: "id" },
+          unique: "unique_tag",
           onDelete: "cascade",
           onUpdate: "cascade",
         },
@@ -37,12 +39,12 @@ module.exports = {
         },
       },
       {
-        indexes: [
-          {
-            unique: true,
+        uniqueKeys: {
+          unique_tag: {
+            customIndex: true,
             fields: ["userId", "paymentTypeId"],
           },
-        ],
+        },
       }
     );
   },

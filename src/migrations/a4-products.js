@@ -13,13 +13,13 @@ module.exports = {
         },
         name: {
           type: Sequelize.STRING,
-          unique: true,
           allowNull: false,
+          unique: "unique_tag",
         },
         slug: {
           type: Sequelize.STRING,
           allowNull: false,
-          unique: true,
+          unique: "unique_tag",
         },
         description: {
           type: Sequelize.STRING,
@@ -27,6 +27,8 @@ module.exports = {
         },
         discount: {
           type: Sequelize.INTEGER,
+          min: 0,
+          max: 100,
           defaultValue: 0,
         },
         price: {
@@ -40,6 +42,7 @@ module.exports = {
             key: "id",
           },
           allowNull: false,
+          unique: "unique_tag",
           onDelete: "cascade",
           onUpdate: "cascade",
         },
@@ -50,7 +53,14 @@ module.exports = {
           type: Sequelize.DATE,
         },
       },
-      {}
+      {
+        uniqueKeys: {
+          unique_tag: {
+            customIndex: true,
+            fields: ["name", "slug", "categoryId"],
+          },
+        },
+      }
     );
   },
   async down(queryInterface, Sequelize) {

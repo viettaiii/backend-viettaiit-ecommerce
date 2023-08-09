@@ -63,17 +63,7 @@ module.exports = {
         },
       },
       {
-        indexes: [
-          {
-            unique: true,
-            fields: [
-              "userPaymentMethodId",
-              "shippingMethodId",
-              "addressId",
-              "orderStatusId",
-            ],
-          },
-        ],
+       
       }
     );
   },

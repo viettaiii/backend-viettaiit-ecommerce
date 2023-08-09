@@ -13,6 +13,7 @@ module.exports = {
         type: Sequelize.ENUM,
         values: ["IPhone", "IPad", "Mac", "Watch", "Âm thanh", "Phụ kiện"],
         allowNull: false,
+        unique: true,
       },
       createdAt: {
         type: Sequelize.DATE,

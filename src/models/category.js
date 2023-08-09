@@ -13,21 +13,24 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Category.init(
-    {  id: {
-      allowNull: false,
-      primaryKey: true,
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-    },
+    {
+      id: {
+        allowNull: false,
+        primaryKey: true,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+      },
       categoryName: {
         type: DataTypes.ENUM,
         values: ["IPhone", "IPad", "Mac", "Watch", "Âm thanh", "Phụ kiện"],
         allowNull: false,
+        unique: true,
       },
     },
     {
       sequelize,
-      modelName: "Category",   timestamps: true,
+      modelName: "Category",
+      timestamps: true,
     }
   );
   return Category;

@@ -49,6 +49,7 @@ module.exports = (sequelize, DataTypes) => {
       discount: {
         type: DataTypes.INTEGER,
         defaultValue: 0,
+        validate: { min: 0, max: 100 },
       },
       price: {
         type: DataTypes.INTEGER,
@@ -56,13 +57,9 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     {
-      hooks: {
-        beforeCreate: async (product, options) => {
-          product.slug = product.name.toLowerCase().split(" ").join("-");
-        },
-      },
       sequelize,
-      modelName: "Product",   timestamps: true,
+      modelName: "Product",
+      timestamps: true,
     }
   );
   return Product;

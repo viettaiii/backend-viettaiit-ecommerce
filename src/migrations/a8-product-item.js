@@ -15,6 +15,10 @@ module.exports = {
           type: Sequelize.INTEGER,
           allowNull: false,
         },
+        isSpecial: {
+          type: Sequelize.BOOLEAN,
+          defaultValue: false,
+        },
         image: {
           type: Sequelize.STRING,
           allowNull: false,
@@ -25,6 +29,7 @@ module.exports = {
             model: "colors",
             key: "id",
           },
+          unique: "unique_tag",
           allowNull: false,
           onDelete: "cascade",
           onUpdate: "cascade",
@@ -35,6 +40,7 @@ module.exports = {
             model: "products",
             key: "id",
           },
+          unique: "unique_tag",
           allowNull: false,
           onDelete: "cascade",
           onUpdate: "cascade",
@@ -48,12 +54,12 @@ module.exports = {
         },
       },
       {
-        indexes: [
-          {
-            unique: true,
+        uniqueKeys: {
+          unique_tag: {
+            customIndex: true,
             fields: ["colorId", "productId"],
           },
-        ],
+        },
       }
     );
   },

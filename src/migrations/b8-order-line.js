@@ -25,7 +25,9 @@ module.exports = {
           references: {
             model: "productItems",
             key: "id",
-          },allowNull: false,
+          },
+          unique: "unique_tag",
+          allowNull: false,
           onDelete: "cascade",
           onUpdate: "cascade",
         },
@@ -35,7 +37,9 @@ module.exports = {
           references: {
             model: "shopOrders",
             key: "id",
-          },allowNull: false,
+          },
+          allowNull: false,
+          unique: "unique_tag",
           onDelete: "cascade",
           onUpdate: "cascade",
         },
@@ -47,12 +51,12 @@ module.exports = {
         },
       },
       {
-        indexes: [
-          {
-            unique: true,
+        uniqueKeys: {
+          unique_tag: {
+            customIndex: true,
             fields: ["productItemId", "shopOrderId"],
           },
-        ],
+        },
       }
     );
   },
