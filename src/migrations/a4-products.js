@@ -46,6 +46,17 @@ module.exports = {
           onDelete: "cascade",
           onUpdate: "cascade",
         },
+        providerId: {
+          type: Sequelize.UUID,
+          references: {
+            model: "providers",
+            key: "id",
+          },
+          allowNull: false,
+          unique: "unique_tag",
+          onDelete: "cascade",
+          onUpdate: "cascade",
+        },
         createdAt: {
           type: Sequelize.DATE,
         },
@@ -57,7 +68,7 @@ module.exports = {
         uniqueKeys: {
           unique_tag: {
             customIndex: true,
-            fields: ["name", "slug", "categoryId"],
+            fields: ["name", "slug", "categoryId", "providerId"],
           },
         },
       }
