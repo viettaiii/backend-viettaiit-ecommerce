@@ -5,6 +5,8 @@ const express = require("express");
 const app = express();
 const connectDB = require("./config/connectDB");
 const routerAuth = require("./routes/auth");
+const routerProducts = require("./routes/products");
+const routerUpload = require("./routes/upload");
 
 const { notFoundMiddleware, errorMiddleware } = require("./middleware");
 const bodyParser = require("body-parser");
@@ -26,6 +28,8 @@ app.get("/auth/verify-email", (req, res) => {
 });
 // Kết tối đến các tuyển đường
 app.use("/api/v1/auth", routerAuth);
+app.use("/api/v1/products", routerProducts);
+app.use("/api/v1/upload", routerUpload);
 
 // Error middleware
 app.use(notFoundMiddleware);
