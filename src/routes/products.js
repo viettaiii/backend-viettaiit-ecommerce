@@ -21,5 +21,5 @@ router
   .delete(deleteProduct);
 
 // nested router
-router.route("/:slug/product-item").post(addProductItem);
+router.route("/:slug/product-item").post( addProductItem);
 module.exports = router;
