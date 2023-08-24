@@ -8,7 +8,7 @@ const {
   getProduct,
   addProductItem,
   deleteManyProduct,
-} = require("../controllers/productController");
+} = require("../controllers/product.ctrl");
 const {
   authenticatePermission,
   authenticateUser,

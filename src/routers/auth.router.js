@@ -6,7 +6,7 @@ const {
   verifyEmail,
   forgotPassword,
   resetPassword,
-} = require("../controllers/authController");
+} = require("../controllers/auth.ctrl");
 const { authenticateUser } = require("../middleware/authentication");
 router.post("/register", register);
 router.post("/login", login);

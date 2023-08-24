@@ -10,7 +10,7 @@ const bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
 const cors = require("cors");
 const configViewEngine = require("./config/viewEngine");
-const createRouters = require("./routers/index.router");
+const createRouters = require("./routers");
 app.use(
   cors({
     origin: "http://localhost:3000",
