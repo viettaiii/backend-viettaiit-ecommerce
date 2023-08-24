@@ -3,13 +3,13 @@ require("dotenv").config();
 require("express-async-errors");
 const express = require("express");
 const app = express();
-const connectDB = require("./config/connectDB");
+const connectDB = require("./infrastructure/config/connectDB");
 
 const { notFoundMiddleware, errorMiddleware } = require("./middleware");
 const bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
 const cors = require("cors");
-const configViewEngine = require("./config/viewEngine");
+const configViewEngine = require("./infrastructure/config/viewEngine");
 const createRouters = require("./routers");
 app.use(
   cors({

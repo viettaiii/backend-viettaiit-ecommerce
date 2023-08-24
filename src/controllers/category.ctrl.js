@@ -1,7 +1,7 @@
 const { StatusCodes } = require("http-status-codes");
 const { createResponse } = require("../utils/createResponse");
 
-const { Category } = require("../models");
+const { Category } = require("../infrastructure/models");
 const getCategories = async (req, res) => {
   const categories = await Category.findAll({});
   const response = createResponse({
