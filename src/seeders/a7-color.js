@@ -14,12 +14,28 @@ module.exports = {
       },
 
       {
-        id:"f399ee56-584d-44aa-a8ad-26ef229c8e3c",
+        id: "f399ee56-584d-44aa-a8ad-26ef229c8e3c",
         value: "gray",
       },
       {
-        id:"fcb0d500-b0d8-494a-95e1-1b2d23619770",
+        id: "fcb0d500-b0d8-494a-95e1-1b2d23619770",
         value: "black",
+      },
+      {
+        id: uuid(),
+        value: "violet",
+      },
+      {
+        id: uuid(),
+        value: "pink",
+      },
+      {
+        id: uuid(),
+        value: "orange",
+      },
+      {
+        id: uuid(),
+        value: "white",
       },
     ]);
   },
@@ -27,4 +43,3 @@ module.exports = {
     return queryInterface.bulkDelete("Colors", null, {});
   },
 };
-

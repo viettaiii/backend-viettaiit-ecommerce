@@ -56,7 +56,7 @@ const getProducts = async (req, res) => {
       }
     });
   }
-  if (categoryName)
+  if (categoryName && categoryName != "all")
     queryObjectCategory.categoryName = {
       [Op.like]: `${categoryName}`,
     };
@@ -68,12 +68,23 @@ const getProducts = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 6;
   const offset = (page - 1) * limit;
-  const order = [];
+  let order = [["createdAt", "desc"]];
   if (sort) {
+    order = [];
     if (sort.startsWith("-")) order.push([sort.slice(1), "desc"]);
     else order.push([sort, "asc"]);
   }
   const products = Product.findAll({
+    attributes: {
+      include: [
+        [
+          sequelize.literal(`(
+            SELECT SUM(qtyInStock) FROM ProductItems WHERE ProductItems.productId = Product.id
+          )`),
+          "inventoryCount",
+        ],
+      ],
+    },
     where: queryObjectProduct,
     include: [
       {
@@ -93,14 +104,16 @@ const getProducts = async (req, res) => {
     offset,
   });
   const count = await Product.count();
+
   const result = await products;
+
   const response = createResponse({
     message: "Lấy sản phẩm thành công",
     status: StatusCodes.OK,
     page,
-    per_page: limit,
+    perPage: limit,
     total: count,
-    total_pages: Math.ceil(count / limit),
+    totalPages: Math.ceil(count / limit),
     data: result,
   });
   res.status(response.status).json(response);
@@ -116,10 +129,12 @@ const createProduct = async (req, res) => {
   const isSlugHave = await Product.findOne({
     where: { slug: createSlug(name) },
   });
+  console.log("erro : dsa");
   if (!productItems) {
     throw new BadRequestError("Vui lòng cung cấp các sản phẩm con!");
   }
-  if (isSlugHave) throw new BadRequestError("Sản phẩm này đã tồn tại");
+  if (isSlugHave)
+    throw new BadRequestError(`Sản phẩm có tên ${name} đã tồn tại`);
   const isCategoryHave = await Category.findByPk(categoryId);
   if (!isCategoryHave) {
     throw new NotFoundError(`Category với id ${categoryId} không tìm thấy!`);
@@ -135,6 +150,7 @@ const createProduct = async (req, res) => {
       },
       { transaction: t }
     );
+
     const response = createResponse({
       message: "Tạo mới sản phẩm thành công",
       status: StatusCodes.CREATED,
@@ -143,6 +159,7 @@ const createProduct = async (req, res) => {
     res.status(response.status).json(response);
   });
 };
+
 const getProduct = async (req, res) => {
   const {
     params: { slug },
@@ -156,6 +173,7 @@ const getProduct = async (req, res) => {
     },
   });
   if (!product) throw new NotFoundError("Sản phẩm không được tìm thấy!");
+
   const response = createResponse({
     message: "Tạo mới sản phẩm thành công",
     status: StatusCodes.CREATED,
@@ -163,6 +181,7 @@ const getProduct = async (req, res) => {
   });
   res.status(StatusCodes.OK).json(response);
 };
+
 const updateProduct = async (req, res) => {
   const {
     params: { slug },
@@ -189,6 +208,8 @@ const updateProduct = async (req, res) => {
   });
   res.status(response.status).json(response);
 };
+
+// delete one product
 const deleteProduct = async (req, res) => {
   const {
     params: { slug },
@@ -204,7 +225,8 @@ const deleteProduct = async (req, res) => {
   });
   res.status(response.status).json(response);
 };
-// nested include query
+
+// add productItem to one product
 const addProductItem = async (req, res) => {
   const {
     params: { slug },
@@ -231,6 +253,16 @@ const addProductItem = async (req, res) => {
   });
   res.status(response.status).json(response);
 };
+
+const deleteManyProduct = async (req, res) => {
+  const { slugs } = req.body;
+  await Product.destroy({ where: { slug: slugs } });
+  const response = createResponse({
+    message: "Xóa nhiều SP thành công!",
+    status: StatusCodes.OK,
+  });
+  res.status(response.status).json(response);
+};
 module.exports = {
   getProducts,
   createProduct,
@@ -239,4 +271,5 @@ module.exports = {
   deleteProduct,
   getProduct,
   addProductItem,
+  deleteManyProduct,
 };

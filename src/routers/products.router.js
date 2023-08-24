@@ -7,12 +7,14 @@ const {
   deleteProduct,
   getProduct,
   addProductItem,
+  deleteManyProduct,
 } = require("../controllers/productController");
 const {
   authenticatePermission,
   authenticateUser,
 } = require("../middleware/authentication");
 router.get("/static", getProductsStatic);
+router.delete("/delete-many", deleteManyProduct);
 router.route("/").get(getProducts).post(createProduct);
 router
   .route("/:slug")
@@ -21,5 +23,5 @@ router
   .delete(deleteProduct);
 
 // nested router
-router.route("/:slug/product-item").post( addProductItem);
+router.route("/:slug/product-item").post(addProductItem);
 module.exports = router;

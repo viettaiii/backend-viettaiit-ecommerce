@@ -30,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       // Caching product detail
       this.hasMany(models.CachingProductDetail, { foreignKey: "productId" });
     }
+   
   }
   Product.init(
     {
@@ -43,6 +44,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
+      },
+      image: {
+        type: DataTypes.STRING,
+        allowNull: false,
       },
       slug: {
         type: DataTypes.STRING,
