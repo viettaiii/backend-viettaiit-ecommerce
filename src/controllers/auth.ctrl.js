@@ -1,4 +1,4 @@
-const { User, TokenUser } = require("../infrastructure/models");
+const { User, TokenUser } = require("../database/models");
 const {
   BadRequestError,
   NotFoundError,

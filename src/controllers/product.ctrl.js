@@ -1,6 +1,6 @@
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError, ConflictError } = require("../errors");
-const { Category, Product, ProductItem, sequelize } = require("../infrastructure/models");
+const { Category, Product, ProductItem, sequelize } = require("../database/models");
 const { Op } = require("sequelize");
 const { createResponse } = require("../utils/createResponse");
 const { createSlug } = require("../utils/slug");

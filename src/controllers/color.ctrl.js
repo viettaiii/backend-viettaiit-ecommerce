@@ -1,7 +1,7 @@
 const { StatusCodes } = require("http-status-codes");
 const { createResponse } = require("../utils/createResponse");
 
-const { Color } = require("../infrastructure/models");
+const { Color } = require("../database/models");
 const getColors = async (req, res) => {
   const colors = await Color.findAll({});
   const response = createResponse({
