@@ -1,6 +1,11 @@
 const { StatusCodes } = require("http-status-codes");
 const { BadRequestError, NotFoundError, ConflictError } = require("../errors");
-const { Category, Product, ProductItem, sequelize } = require("../database/models");
+const {
+  Category,
+  Product,
+  ProductItem,
+  sequelize,
+} = require("../database/models");
 const { Op } = require("sequelize");
 const { createResponse } = require("../utils/createResponse");
 const { createSlug } = require("../utils/slug");
@@ -129,7 +134,6 @@ const createProduct = async (req, res) => {
   const isSlugHave = await Product.findOne({
     where: { slug: createSlug(name) },
   });
-  console.log("erro : dsa");
   if (!productItems) {
     throw new BadRequestError("Vui lòng cung cấp các sản phẩm con!");
   }
@@ -139,11 +143,12 @@ const createProduct = async (req, res) => {
   if (!isCategoryHave) {
     throw new NotFoundError(`Category với id ${categoryId} không tìm thấy!`);
   }
-  req.body.image = process.env.BACKEND_URL + "/static/uploads/" + image;
+
+  req.body.image = image;
   req.body.slug = createSlug(name);
   await sequelize.transaction(async (t) => {
     const product = await Product.create(
-      { ...req.body },
+      { ...req.body, productItems },
       {
         include: ["productItems"],
         transaction: t,
@@ -152,7 +157,7 @@ const createProduct = async (req, res) => {
     );
 
     const response = createResponse({
-      message: "Tạo mới sản phẩm thành công",
+      message: "Tạo mới sản phẩm",
       status: StatusCodes.CREATED,
       data: product,
     });
@@ -175,7 +180,7 @@ const getProduct = async (req, res) => {
   if (!product) throw new NotFoundError("Sản phẩm không được tìm thấy!");
 
   const response = createResponse({
-    message: "Tạo mới sản phẩm thành công",
+    message: "Tìm kiếm sản phẩm",
     status: StatusCodes.CREATED,
     data: product,
   });
@@ -185,24 +190,48 @@ const getProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
   const {
     params: { slug },
-    body: { price, discount, description },
+    body: { image, categoryId, description, price, productItems },
   } = req;
-  if (!price && !discount && !(discount === 0) && !description) {
-    throw new BadRequestError(
-      "Vui lòng cung cấp ít nhất 1 giá trị cần cập nhật(price, discount, description)"
-    );
-  }
+
   const product = await Product.findOne({ where: { slug } });
   if (!product) {
     throw new NotFoundError("Không tìm thấy sản phẩm!");
   }
-  if (price) product.price = price;
+  // product.name = name;
+  product.image = image;
+  product.categoryId = categoryId;
+  product.description = description;
+  product.price = price;
+  // product.slug = createSlug(name);
 
-  if (discount === 0 || discount) product.discount = discount;
-  if (description) product.description = description;
+  // Luw product Items
+  // return res.json(productItems);
+  for (const productItem of productItems) {
+    const productItemExist = await ProductItem.findOne({
+      where: {
+        productId: product.id,
+        id: productItem.id ? productItem.id : null,
+      },
+    });
+    if (productItemExist) {
+      productItemExist.qtyInStock = productItem.qtyInStock;
+      productItemExist.image = productItem.image;
+      productItemExist.isSpecial = productItem.isSpecial;
+      productItemExist.colorId = productItem.colorId;
+      await productItemExist.save();
+    } else {
+      await ProductItem.create({
+        image: productItem.image,
+        qtyInStock: productItem.qtyInStock,
+        colorId: productItem.colorId,
+        isSpecial: productItem.isSpecial,
+        productId: product.id,
+      });
+    }
+  }
   await product.save();
   const response = createResponse({
-    message: "Cập nhật sản phẩm thành công",
+    message: "Cập nhật sản phẩm",
     status: StatusCodes.OK,
     data: product,
   });
@@ -220,7 +249,7 @@ const deleteProduct = async (req, res) => {
   }
   await product.destroy();
   const response = createResponse({
-    message: "Xóa sản phẩm thành công",
+    message: "Xóa sản phẩm",
     status: StatusCodes.OK,
   });
   res.status(response.status).json(response);
@@ -239,7 +268,7 @@ const addProductItem = async (req, res) => {
     throw new BadRequestError("Vui lòng cung cấp số lượng của sản phẩm!");
   const product = await Product.findOne({ where: { slug } });
   if (!product) {
-    throw new NotFoundError("Sản phẩm không tìm thấy!");
+    throw new NotFoundError("Không tìm thấy!");
   }
   const isExistItem = await ProductItem.findOne({
     where: { colorId, productId: product.id },
@@ -248,7 +277,7 @@ const addProductItem = async (req, res) => {
   req.body.productId = product.id;
   await ProductItem.create({ ...req.body });
   const response = createResponse({
-    message: "Thêm sản phẩm thành công",
+    message: "Thêm sản phẩm",
     status: StatusCodes.OK,
   });
   res.status(response.status).json(response);
@@ -258,7 +287,7 @@ const deleteManyProduct = async (req, res) => {
   const { slugs } = req.body;
   await Product.destroy({ where: { slug: slugs } });
   const response = createResponse({
-    message: "Xóa nhiều SP thành công!",
+    message: "Xóa nhiều SP!",
     status: StatusCodes.OK,
   });
   res.status(response.status).json(response);
