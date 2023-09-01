@@ -21,7 +21,7 @@ const getProductsStatic = async (req, res) => {
   res.status(response.status).json(response);
 };
 const getProducts = async (req, res) => {
-  const { name, categoryName, discount, providerName, numericFilters, sort } =
+  const { name, categoryId, discount, providerId, numericFilters, sort } =
     req.query;
   const queryObjectProduct = {};
   const queryObjectCategory = {};
@@ -61,13 +61,13 @@ const getProducts = async (req, res) => {
       }
     });
   }
-  if (categoryName && categoryName != "all")
-    queryObjectCategory.categoryName = {
-      [Op.like]: `${categoryName}`,
+  if (categoryId)
+    queryObjectCategory.id = {
+      [Op.like]: `${categoryId}`,
     };
-  if (providerName) {
-    queryObjectProvider.providerName = {
-      [Op.like]: `${providerName}`,
+  if (providerId) {
+    queryObjectProvider.id = {
+      [Op.like]: `${providerId}`,
     };
   }
   const page = parseInt(req.query.page) || 1;
