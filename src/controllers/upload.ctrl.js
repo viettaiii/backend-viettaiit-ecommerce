@@ -3,7 +3,7 @@ const { createResponse } = require("../utils/createResponse");
 
 const uploadSingle = async (req, res) => {
   const response = createResponse({
-    message: "Tạo file ảnh thành công!",
+    message: "uploaded successfully file",
     status: StatusCodes.OK,
     data: req.file.filename,
   });
@@ -12,7 +12,7 @@ const uploadSingle = async (req, res) => {
 
 const uploadMultiple = async (req, res) => {
   const response = createResponse({
-    message: "Tạo file ảnh thành công!",
+    message: "uploaded successfully file",
     status: StatusCodes.OK,
     data: req.files,
   });

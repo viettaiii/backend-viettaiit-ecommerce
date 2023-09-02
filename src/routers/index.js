@@ -5,6 +5,7 @@ const routerCategories = require("./category.router");
 const routerProviders = require("./provider.router");
 const routerColors = require("./color.router");
 const routerUsers = require("./user.router");
+const routerAddresses = require("./address.router");
 
 const createRouters = (app) => {
   app.use("/api/v1/auth", routerAuth);
@@ -14,6 +15,7 @@ const createRouters = (app) => {
   app.use("/api/v1/colors", routerColors);
   app.use("/api/v1/upload", routerUpload);
   app.use("/api/v1/users", routerUsers);
+  app.use("/api/v1/addresses", routerAddresses);
 };
 
 module.exports = createRouters;

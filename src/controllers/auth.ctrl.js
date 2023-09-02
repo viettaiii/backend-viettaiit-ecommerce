@@ -19,14 +19,16 @@ const { createResponse } = require("../utils/createResponse");
 const register = async (req, res) => {
   const { name, email, password } = req.body;
   if (!name || !email) {
-    throw new BadRequestError("Vui lòng điển đầy đủ thông tin!");
+    throw new BadRequestError("information is required");
   }
   if (password.length < 5) {
-    throw new UnprocessableEntityError("Password ít nhất 6 kí tự!");
+    throw new UnprocessableEntityError(
+      "password is required and must be at least 5 characters"
+    );
   }
   const user = await User.findOne({ where: { email } });
   if (user) {
-    throw new ConflictError("Email này đã được sử dụng!");
+    throw new ConflictError("email is already in use");
   }
   const newUser = {
     name,
@@ -35,7 +37,7 @@ const register = async (req, res) => {
   };
   await User.create(newUser);
   const response = createResponse({
-    message: "Tạo mới một người dùng thành công.",
+    message: "add new user success",
     status: StatusCodes.CREATED,
   });
   res.status(response.status).json(response);
@@ -43,20 +45,20 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   const { email, password } = req.body;
   if (!password || !email) {
-    throw new BadRequestError("Vui lòng điển đầy đủ thông tin!");
+    throw new BadRequestError("please provide info!");
   }
   if (password.length < 5) {
-    throw new UnprocessableEntityError("Password ít nhất 6 kí tự!");
+    throw new UnprocessableEntityError(
+      "password is required and must be at least 6 characters"
+    );
   }
   const user = await User.findOne({ where: { email } });
   if (!user) {
-    throw new NotFoundError("Người dùng không tồn tại trong hệ thống");
+    throw new NotFoundError("user not found");
   }
   const isMatch = await comparePassword(password, user.password);
   if (!isMatch) {
-    throw new UnauthorizedError(
-      "Bạn không có quyền đăng nhập vào tài khoản này."
-    );
+    throw new UnauthorizedError("unauthorized");
   }
   if (!user.isVerified) {
     const origin = process.env.FRONTEND_CLIENT_URL;
@@ -70,7 +72,7 @@ const login = async (req, res) => {
     });
     await user.save();
     throw new UnauthorizedError(
-      "Bạn cần xác minh email dể có thể đăng nhập, kiểm tra email của bạn để xác minh"
+      "please check your email to verify your account."
     );
   }
   let userShow = {
@@ -80,7 +82,7 @@ const login = async (req, res) => {
     role: user.role,
   };
   const response = createResponse({
-    message: "Đăng nhập thành công",
+    message: "success",
     status: StatusCodes.OK,
     data: userShow,
   });
@@ -121,21 +123,21 @@ const login = async (req, res) => {
 const verifyEmail = async (req, res) => {
   const { verificationToken, email } = req.body;
   if (!verificationToken || !email) {
-    throw new BadRequestError("Vui lòng cung cấp đầy đủ thông tin!");
+    throw new BadRequestError("please provide infor!");
   }
   const user = await User.findOne({ where: { email } });
   if (!user) {
-    throw new NotFoundError("Người dùng không tồn tại trên hệ thống");
+    throw new NotFoundError("user not found");
   }
   if (verificationToken !== user.verificationToken) {
-    throw new ForBiddenError("Bạn không có quyền xác minh email này!");
+    throw new ForBiddenError("forbidden");
   }
   user.isVerified = true;
   user.verifiedDate = new Date();
   user.verificationToken = null;
   await user.save();
   const response = createResponse({
-    message: "Xác mình email thành công!",
+    message: "verified successfully",
     status: StatusCodes.OK,
   });
   res.status(response.status).json(response);
@@ -143,11 +145,11 @@ const verifyEmail = async (req, res) => {
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
   if (!email) {
-    throw new BadRequestError("Vui lòng cung cấp email");
+    throw new BadRequestError("please provide email!");
   }
   const user = await User.findOne({ where: { email } });
   if (!user) {
-    throw new NotFoundError("Email này không tồn tại trên hệ thống");
+    throw new NotFoundError("email not found");
   }
   user.passwordToken = createString();
   user.passwordTokenExpire = new Date(Date.now() + 1000 * 60 * 1); // Thời gian hiện tại + 10 phút
@@ -160,7 +162,7 @@ const forgotPassword = async (req, res) => {
   });
   const response = createResponse({
     message:
-      "Kiểm tra email của bạn để đặt lại mật khẩu, hạn đắt mật khẩu sẽ hết trong 10 phút đến",
+      "check your email to reset your password in 10 minutes",
 
     status: StatusCodes.ACCEPTED,
   });
@@ -169,11 +171,11 @@ const forgotPassword = async (req, res) => {
 const resetPassword = async (req, res) => {
   const { passwordToken, email, password, confirmPassword } = req.body;
   if (!passwordToken || !email) {
-    throw new BadRequestError("Vui lòng cung cấp đầy đủ giá trị");
+    throw new BadRequestError("please provide info");
   }
   const user = await User.findOne({ where: { email } });
   if (!user) {
-    throw new NotFoundError("Người dùng không tồn tại trên hệ thống");
+    throw new NotFoundError("user not found");
   }
 
   const currentDate = new Date(Date.now());
@@ -183,18 +185,18 @@ const resetPassword = async (req, res) => {
       passwordToken === user.passwordToken
     )
   ) {
-    throw new UnauthorizedError("Mã token đã hết hạn");
+    throw new UnauthorizedError("token is invalid");
   }
 
   if (password !== confirmPassword) {
-    throw new BadRequestError("Mật khẩu không trùng khớp, vui lòng thử lại");
+    throw new BadRequestError("password is incorrect");
   }
   user.password = await hashPassword(password);
   user.passwordToken = null;
   user.passwordTokenExpire = null;
   await user.save();
   const response = createResponse({
-    message: "Đặt mật khẩu thành công",
+    message: "reset password successfully",
     status: StatusCodes.OK,
   });
   res.status(response.status).json(response);
@@ -204,7 +206,7 @@ const logout = async (req, res) => {
   res.clearCookie("access_token");
   res.clearCookie("refresh_token");
   const response = createResponse({
-    message: "Đăng xuất thành công.",
+    message: "logout successfully",
     status: StatusCodes.OK,
   });
   res.status(response.status).json(response);
