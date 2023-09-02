@@ -21,7 +21,7 @@ const addAddressToUser = async (req, res) => {
   if (!phoneNumber || !province || !district || !wards || !country)
     throw new BadRequestError("info is required");
   const isAddress = await Address.findOne({ where: { userId } });
-  if (isAddress) throw new ConflictError("address is already in use");
+  if (isAddress) throw new BadRequestError("address user is already in use");
   req.body.userId = userId;
   await Address.create({ ...req.body });
   const response = createResponse({
