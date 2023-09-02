@@ -8,7 +8,7 @@ const {
 } = require("../controllers/address.ctrl");
 
 router
-  .route("/:userId/users")
+  .route("/users/:userId")
   .post(addAddressToUser)
   .get(getAddressUser)
   .patch(updateAddressUser)
