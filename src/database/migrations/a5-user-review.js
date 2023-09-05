@@ -13,7 +13,8 @@ module.exports = {
         },
         ratingValue: {
           type: Sequelize.INTEGER,
-          defaultValue: 0,
+          defaultValue: 1,
+          allowNull: false,
         },
         comment: {
           type: Sequelize.STRING,
