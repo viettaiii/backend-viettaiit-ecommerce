@@ -14,13 +14,21 @@ const {
   authenticateUser,
 } = require("../middleware/authentication");
 router.get("/static", getProductsStatic);
-router.delete("/delete-many", deleteManyProduct);
-router.route("/").get(getProducts).post(createProduct);
+router.delete(
+  "/delete-many",
+  authenticateUser,
+  authenticatePermission("admin"),
+  deleteManyProduct
+);
+router
+  .route("/")
+  .get(getProducts)
+  .post(authenticateUser, authenticatePermission("admin"), createProduct);
 router
   .route("/:slug")
   .get(getProduct)
-  .patch(updateProduct)
-  .delete(deleteProduct);
+  .patch(authenticateUser, authenticatePermission("admin"), updateProduct)
+  .delete(authenticateUser, authenticatePermission("admin"), deleteProduct);
 
 // nested router
 router.route("/:slug/product-item").post(addProductItem);
