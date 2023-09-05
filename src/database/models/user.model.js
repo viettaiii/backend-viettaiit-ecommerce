@@ -77,11 +77,12 @@ module.exports = (sequelize, DataTypes) => {
     {
       hooks: {
         beforeCreate: async (user, options) => {
-            user.slug
+          user.password = await hashPassword(user.password);
         },
       },
       sequelize,
-      modelName: "User",   timestamps: true,
+      modelName: "User",
+      timestamps: true,
     }
   );
   return User;
