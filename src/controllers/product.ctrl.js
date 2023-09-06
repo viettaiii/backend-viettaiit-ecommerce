@@ -175,12 +175,14 @@ const getProduct = async (req, res) => {
   const product = await Product.findOne({
     where: { slug },
     attributes: { exclude: ["createdAt", "updatedAt"] },
-    include: {
-      association: "productItems",
-      attributes: { exclude: ["createdAt", "updatedAt"] },
-    },
+    include: [
+      {
+        association: "productItems",
+        attributes: { exclude: ["createdAt", "updatedAt"] },
+      },
+    ],
   });
-  if (!product) throw new NotFoundError("Sản phẩm không được tìm thấy!");
+  if (!product) throw new NotFoundError("product not found!");
 
   const response = createResponse({
     message: "get product detail successfully",
@@ -295,6 +297,8 @@ const deleteManyProduct = async (req, res) => {
   });
   res.status(response.status).json(response);
 };
+
+
 module.exports = {
   getProducts,
   createProduct,

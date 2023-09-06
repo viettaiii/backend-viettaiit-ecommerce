@@ -9,7 +9,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // Product
-      this.hasMany(models.Product, { foreignKey: "categoryId" , as:"products" });
+      this.hasMany(models.Product, {
+        foreignKey: "categoryId",
+        as: "products",
+      });
     }
   }
   Category.init(
@@ -25,6 +28,10 @@ module.exports = (sequelize, DataTypes) => {
         values: ["IPhone", "IPad", "Mac", "Watch", "Âm thanh", "Phụ kiện"],
         allowNull: false,
         unique: true,
+      },
+      image: {
+        type: DataTypes.STRING,
+        allowNull: false,
       },
     },
     {

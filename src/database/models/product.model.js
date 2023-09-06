@@ -19,7 +19,10 @@ module.exports = (sequelize, DataTypes) => {
         as: "provider",
       });
       // Product
-      this.hasMany(models.UserReview, { foreignKey: "productId" });
+      this.hasMany(models.UserReview, {
+        foreignKey: "productId",
+        as: "reviews",
+      });
 
       // Product Item
       this.hasMany(models.ProductItem, {
@@ -30,7 +33,6 @@ module.exports = (sequelize, DataTypes) => {
       // Caching product detail
       this.hasMany(models.CachingProductDetail, { foreignKey: "productId" });
     }
-   
   }
   Product.init(
     {

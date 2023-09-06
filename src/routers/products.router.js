@@ -8,6 +8,7 @@ const {
   getProduct,
   addProductItem,
   deleteManyProduct,
+  getReviewsProduct,
 } = require("../controllers/product.ctrl");
 const {
   authenticatePermission,
@@ -29,6 +30,7 @@ router
   .get(getProduct)
   .patch(authenticateUser, authenticatePermission("admin"), updateProduct)
   .delete(authenticateUser, authenticatePermission("admin"), deleteProduct);
+
 
 // nested router
 router.route("/:slug/product-item").post(addProductItem);

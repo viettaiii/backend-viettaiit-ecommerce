@@ -21,8 +21,6 @@
          + edit product  [PATCH]  /products/delete-many  => OK
          + add new product  [POST] /products    => OK
 
-         + get all reviews of product [GET] /products/:productId/reviews
-
    - category
        - router
          + get all category  [GET] /categories => OK
@@ -58,6 +56,9 @@
          + get detail review [GET] /userReviews/:reviewId => OK
          + delete detail review [DELETE] /userReviews/:reviewId => OK
          + patch review from product by user [PATCH] /userReviews/:reviewId => OK
+         
+         + get reviews of a product [GET] /reviews/products/:productId => OK
 
        
-         
+ Ngay 6/9/2023
+   - Tìm cách : upload file chỉ định lưu ảnh theo vị trí

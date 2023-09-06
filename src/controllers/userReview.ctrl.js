@@ -2,7 +2,12 @@ const { StatusCodes } = require("http-status-codes");
 const { UserReview, Product, User } = require("../database/models");
 const { createResponse } = require("../utils/createResponse");
 const { Op } = require("sequelize");
-const { BadRequestError, NotFoundError, ForBiddenError } = require("../errors");
+const {
+  BadRequestError,
+  NotFoundError,
+  ForBiddenError,
+  ConflictError,
+} = require("../errors");
 const { checkPermission } = require("../utils/permission");
 
 const getReviews = async (req, res) => {
@@ -27,6 +32,11 @@ const createReview = async (req, res) => {
   if (ratingValue > 6) throw new BadRequestError("rating  must be 1 --> 5 ");
   const isProduct = await Product.findByPk(productId);
   if (!isProduct) throw new NotFoundError("product not found!");
+  const isReview = await UserReview.findOne({ where: { userId, productId } });
+  if (isReview)
+    throw new ConflictError(
+      "everybody only have a review in a product and can update the rating and comment"
+    );
   await UserReview.create({ ...req.body, userId });
   const response = createResponse({
     message: "created successfully",
@@ -79,10 +89,33 @@ const updateReview = async (req, res) => {
   });
   res.status(response.status).json(response);
 };
+
+// get all review of a product
+
+const getReviewsProduct = async (req, res) => {
+  const { productId } = req.params;
+  const reviews = await UserReview.findAll({
+    where: { productId },
+  });
+  const count = reviews.length;
+  let total = 0;
+  reviews.forEach((review) => {
+    total += review.ratingValue;
+  });
+  const response = createResponse({
+    message: "get reviews of a product",
+    status: StatusCodes.OK,
+    data: reviews,
+    total: count,
+    averageRating: total / count,
+  });
+  res.status(response.status).json(response);
+};
 module.exports = {
   getReviews,
   getReview,
   createReview,
   deleteReview,
   updateReview,
+  getReviewsProduct,
 };

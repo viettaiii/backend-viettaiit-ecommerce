@@ -5,6 +5,7 @@ const {
   createReview,
   deleteReview,
   updateReview,
+  getReviewsProduct,
 } = require("../controllers/userReview.ctrl");
 const { authenticateUser } = require("../middleware/authentication");
 
@@ -14,5 +15,6 @@ router
   .get(getReview)
   .delete(authenticateUser, deleteReview)
   .patch(authenticateUser, updateReview);
+router.get("/products/:productId", getReviewsProduct);
 
 module.exports = router;
