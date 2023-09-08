@@ -30,8 +30,6 @@ router
   .get(getProduct)
   .patch(authenticateUser, authenticatePermission("admin"), updateProduct)
   .delete(authenticateUser, authenticatePermission("admin"), deleteProduct);
-
-
 // nested router
 router.route("/:slug/product-item").post(addProductItem);
 module.exports = router;

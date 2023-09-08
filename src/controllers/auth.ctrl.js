@@ -161,8 +161,7 @@ const forgotPassword = async (req, res) => {
     origin: process.env.FRONTEND_CLIENT_URL,
   });
   const response = createResponse({
-    message:
-      "check your email to reset your password in 10 minutes",
+    message: "check your email to reset your password in 10 minutes",
 
     status: StatusCodes.ACCEPTED,
   });
