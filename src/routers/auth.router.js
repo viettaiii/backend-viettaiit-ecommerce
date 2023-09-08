@@ -37,7 +37,6 @@ router.get("/login/success", (req, res) => {
     email: req.user.email,
     role: req.user.role,
   };
-  if (!req.user) userShow = null;
   const response = createResponse({
     message: "success",
     status: StatusCodes.OK,
@@ -54,7 +53,6 @@ router.get("/login/failure", (req, res) => {
   res.status(response.status).json(response);
 });
 
-
 // google
 router.get(
   "/google",
@@ -66,8 +64,8 @@ router.get(
 router.get(
   "/google/callback",
   passport.authenticate("google", {
-    successRedirect: process.env.FRONTEND_CLIENT_URL,
-    failureRedirect: "/api/v1/auth/login/failure",
+    successRedirect: process.env.FRONTEND_CLIENT_URL + "/login/success",
+    failureRedirect: process.env.FRONTEND_CLIENT_URL + "/login/failure",
   })
 );
 
@@ -75,33 +73,17 @@ router.get(
 router.get(
   "/facebook",
   passport.authenticate("facebook", {
-    scope: ["https://www.googleapis.com/auth/plus.login", "email"],
+    scope: ["email"],
   })
 );
 
 router.get(
   "/facebook/callback",
   passport.authenticate("facebook", {
-    successRedirect: process.env.FRONTEND_CLIENT_URL,
-    failureRedirect: "/api/v1/auth/login/failure",
+    successRedirect: process.env.FRONTEND_CLIENT_URL + "/login/success",
+    failureRedirect: process.env.FRONTEND_CLIENT_URL + "/login/failure",
   })
 );
-
-// // github
-// router.get(
-//   "/github",
-//   passport.authenticate("github", {
-//     scope: ["https://www.googleapis.com/auth/plus.login", "email"],
-//   })
-// );
-
-// router.get(
-//   "/github/callback",
-//   passport.authenticate("github", {
-//     successRedirect: process.env.FRONTEND_CLIENT_URL,
-//     failureRedirect: "/api/v1/auth/login/failure",
-//   })
-// );
 
 // passport
 

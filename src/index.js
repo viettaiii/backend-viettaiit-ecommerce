@@ -27,8 +27,8 @@ configViewEngine(app);
 // google strategy
 app.use(
   session({
-    secret: "your-secret-key",
-    // resave: false,
+    secret: process.env.PASSPORT_SESSION_SECRET,
+    resave: false,
     saveUninitialized: false,
   })
 );
