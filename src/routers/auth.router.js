@@ -85,6 +85,15 @@ router.get(
   })
 );
 
-// passport
+// github
+router.get("/github", passport.authenticate("github", { scope: ["user:email"] }));
+
+router.get(
+  "/github/callback",
+  passport.authenticate("github", {
+    successRedirect: process.env.FRONTEND_CLIENT_URL + "/login/success",
+    failureRedirect: process.env.FRONTEND_CLIENT_URL + "/login/failure",
+  })
+);
 
 module.exports = router;
