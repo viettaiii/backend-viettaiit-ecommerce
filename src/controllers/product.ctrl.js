@@ -298,6 +298,21 @@ const deleteManyProduct = async (req, res) => {
   res.status(response.status).json(response);
 };
 
+// get product hot sales
+const getProductHotSales = async (req, res) => {
+  const products = await Product.findAll({
+    where: { discount: { [Op.ne]: 0 } },
+    offset: 0,
+    limit: 10,
+  });
+
+  const response = createResponse({
+    message: "get products hot sales",
+    status: StatusCodes.OK,
+    data: products,
+  });
+  res.status(response.status).json(response);
+};
 
 module.exports = {
   getProducts,
@@ -308,4 +323,5 @@ module.exports = {
   getProduct,
   addProductItem,
   deleteManyProduct,
+  getProductHotSales,
 };
