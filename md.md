@@ -20,7 +20,8 @@
          + delete many product  [DELETE]  /products/delete-many   => OK
          + edit product  [PATCH]  /products/delete-many  => OK
          + add new product  [POST] /products    => OK
-
+         
+         + get product theo category(iphone ,ipad, macbook, applewatch) => OK
    - category
        - router
          + get all category  [GET] /categories => OK
