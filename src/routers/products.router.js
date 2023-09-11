@@ -9,6 +9,7 @@ const {
   addProductItem,
   deleteManyProduct,
   getProductHotSales,
+  getProductsCategory,
 } = require("../controllers/product.ctrl");
 const {
   authenticatePermission,
@@ -18,6 +19,10 @@ router.get("/static", getProductsStatic);
 
 // GET PRODUCT HOT SALE
 router.route("/hot-sales").get(getProductHotSales);
+
+// GET PRODUCT THEO LOAI
+router.route("/categories/:categoryName").get(getProductsCategory);
+
 router.delete(
   "/delete-many",
   authenticateUser,

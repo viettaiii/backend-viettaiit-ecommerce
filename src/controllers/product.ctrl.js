@@ -314,6 +314,36 @@ const getProductHotSales = async (req, res) => {
   res.status(response.status).json(response);
 };
 
+// get product hot sales
+const getProductsCategory = async (req, res) => {
+  const { categoryName } = req.params;
+  const products = await Product.findAll({
+    where: { name: { [Op.like]: `%${categoryName}%` } },
+    offset: 0,
+    limit: 8,
+  });
+  let category;
+  if (categoryName.toUpperCase().startsWith("IPHONE")) {
+    category = "productsIphone";
+  }
+  if (categoryName.toUpperCase().startsWith("MACBOOK")) {
+    category = "productsMacbook";
+  }
+  if (categoryName.toUpperCase().startsWith("IPAD")) {
+    category = "productsIpad";
+  }
+  if (categoryName.toUpperCase().startsWith("APPLE WATCH")) {
+    category = "productsAppleWatch";
+  }
+  const response = createResponse({
+    message: `get products category ${categoryName}`,
+    status: StatusCodes.OK,
+    category,
+    data: products,
+  });
+  res.status(response.status).json(response);
+};
+
 module.exports = {
   getProducts,
   createProduct,
@@ -324,4 +354,5 @@ module.exports = {
   addProductItem,
   deleteManyProduct,
   getProductHotSales,
+  getProductsCategory,
 };
