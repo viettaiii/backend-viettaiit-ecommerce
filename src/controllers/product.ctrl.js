@@ -34,9 +34,10 @@ const getProducts = async (req, res) => {
     };
   if (discount === "true") {
     queryObjectProduct.discount = {
-      [Op.eq]: 0,
+      [Op.ne]: 0,
     };
   }
+
   if (numericFilters) {
     const regex = /\b(>|>=|=|<|<=)\b/g;
     const listFilters = numericFilters.replace(regex, (match) => `-${match}-`);
@@ -73,7 +74,7 @@ const getProducts = async (req, res) => {
     };
   }
   const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 6;
+  const limit = parseInt(req.query.limit) || 8;
   const offset = (page - 1) * limit;
   let order = [["createdAt", "desc"]];
   if (sort) {
@@ -81,7 +82,7 @@ const getProducts = async (req, res) => {
     if (sort.startsWith("-")) order.push([sort.slice(1), "desc"]);
     else order.push([sort, "asc"]);
   }
-  const products = Product.findAll({
+  const { count, rows } = await Product.findAndCountAll({
     attributes: {
       include: [
         [
@@ -110,9 +111,6 @@ const getProducts = async (req, res) => {
     limit,
     offset,
   });
-  const count = await Product.count();
-
-  const result = await products;
 
   const response = createResponse({
     message: "success",
@@ -121,7 +119,7 @@ const getProducts = async (req, res) => {
     perPage: limit,
     total: count,
     totalPages: Math.ceil(count / limit),
-    data: result,
+    data: rows,
   });
   res.status(response.status).json(response);
 };
@@ -178,6 +176,18 @@ const getProduct = async (req, res) => {
     include: [
       {
         association: "productItems",
+        attributes: { exclude: ["createdAt", "updatedAt"] },
+        include: {
+          association: "color",
+          attributes: { exclude: ["createdAt", "updatedAt"] },
+        },
+      },
+      {
+        association: "category",
+        attributes: { exclude: ["createdAt", "updatedAt"] },
+      },
+      {
+        association: "provider",
         attributes: { exclude: ["createdAt", "updatedAt"] },
       },
     ],
