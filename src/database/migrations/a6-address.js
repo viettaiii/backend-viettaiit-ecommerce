@@ -22,7 +22,7 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      wards: {
+      ward: {
         type: Sequelize.STRING,
         allowNull: false,
       },

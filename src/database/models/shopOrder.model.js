@@ -17,20 +17,22 @@ module.exports = (sequelize, DataTypes) => {
       // Shipping method
       this.belongsTo(models.ShippingMethod, { foreignKey: "shippingMethodId" });
 
-      // User payment method
-      this.hasMany(models.UserPaymentMethod, { foreignKey: "paymentMethodId" });
-
       // Order Line
       this.hasMany(models.OrderLine, { foreignKey: "shopOrderId" });
     }
   }
   ShopOrder.init(
-    {  id: {
-      allowNull: false,
-      primaryKey: true,
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-    },
+    {
+      id: {
+        allowNull: false,
+        primaryKey: true,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+      },
+      shippingAddress: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       orderDate: {
         type: DataTypes.DATE,
         defaultValue: new Date(),
@@ -42,7 +44,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "ShopOrder",   timestamps: true,
+      modelName: "ShopOrder",
+      timestamps: true,
     }
   );
   return ShopOrder;

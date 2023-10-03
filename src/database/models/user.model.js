@@ -19,9 +19,6 @@ module.exports = (sequelize, DataTypes) => {
 
       // Address
       this.hasOne(models.Address, { foreignKey: "userId" });
-
-      // User payment method
-      this.hasMany(models.UserPaymentMethod, { foreignKey: "userId" });
     }
   }
   User.init(
@@ -54,6 +51,10 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: "client",
       },
       isVerified: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      isBlocked: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },

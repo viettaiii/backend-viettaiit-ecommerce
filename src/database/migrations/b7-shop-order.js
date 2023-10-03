@@ -19,30 +19,17 @@ module.exports = {
           type: Sequelize.FLOAT,
           allowNull: false,
         },
-        userPaymentMethodId: {
-          type: Sequelize.UUID,
-          references: {
-            model: "UserPaymentMethods",
-            key: "id",
-          },allowNull: false,
-          onDelete: "cascade",
-          onUpdate: "cascade",
-        },
-        addressId: {
-          type: Sequelize.UUID,
-          references: {
-            model: "addresses",
-            key: "id",
-          },allowNull: false,
-          onDelete: "cascade",
-          onUpdate: "cascade",
+        shippingAddress: {
+          type: Sequelize.STRING,
+          allowNull: false,
         },
         shippingMethodId: {
           type: Sequelize.UUID,
           references: {
             model: "shippingMethods",
             key: "id",
-          },allowNull: false,
+          },
+          allowNull: false,
           onDelete: "cascade",
           onUpdate: "cascade",
         },
@@ -51,7 +38,8 @@ module.exports = {
           references: {
             model: "orderStatuses",
             key: "id",
-          },allowNull: false,
+          },
+          allowNull: false,
           onDelete: "cascade",
           onUpdate: "cascade",
         },
@@ -62,9 +50,7 @@ module.exports = {
           type: Sequelize.DATE,
         },
       },
-      {
-       
-      }
+      {}
     );
   },
   async down(queryInterface, Sequelize) {

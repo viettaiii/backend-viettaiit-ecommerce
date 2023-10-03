@@ -34,6 +34,10 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
       },
+      isBlocked: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
       verifiedDate: {
         type: Sequelize.DATE,
         defaultValue: null,
