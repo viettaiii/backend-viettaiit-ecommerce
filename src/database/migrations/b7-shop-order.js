@@ -23,16 +23,6 @@ module.exports = {
           type: Sequelize.STRING,
           allowNull: false,
         },
-        shippingMethodId: {
-          type: Sequelize.UUID,
-          references: {
-            model: "shippingMethods",
-            key: "id",
-          },
-          allowNull: false,
-          onDelete: "cascade",
-          onUpdate: "cascade",
-        },
         orderStatusId: {
           type: Sequelize.UUID,
           references: {

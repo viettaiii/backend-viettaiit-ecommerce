@@ -8,14 +8,6 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // Address
-      this.belongsTo(models.Address, { foreignKey: "addressId" });
-
-      // Order Status
-      this.belongsTo(models.OrderStatus, { foreignKey: "orderStatusId" });
-
-      // Shipping method
-      this.belongsTo(models.ShippingMethod, { foreignKey: "shippingMethodId" });
 
       // Order Line
       this.hasMany(models.OrderLine, { foreignKey: "shopOrderId" });
@@ -32,6 +24,10 @@ module.exports = (sequelize, DataTypes) => {
       shippingAddress: {
         type: DataTypes.STRING,
         allowNull: false,
+      },
+      status: {
+        type: DataTypes.ENUM,
+        values:['pending','completed']
       },
       orderDate: {
         type: DataTypes.DATE,

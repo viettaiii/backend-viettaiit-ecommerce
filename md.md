@@ -63,8 +63,13 @@
        
   - shopping cart
       - router
-        + Add new or update qty shopping cart item of a user [POST] /shopping-cart 
-        + Delete a shopping cart item of a user
-        + Get all shopping cart items of a user
+        + Add new or update qty shopping cart item of a user [POST] /shopping-cart => OK
+        + Delete a shopping cart item of a user => OK
+        + Get all shopping cart items of a user => OK
+
+
+
+# TASK
+  - viết shop order
  Ngay 6/9/2023
    - Tìm cách : upload file chỉ định lưu ảnh theo vị trí
