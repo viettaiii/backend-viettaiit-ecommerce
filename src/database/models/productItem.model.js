@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       // Product
       this.belongsTo(models.Product, {
         foreignKey: "productId",
-        as: "productItems",
+        as: "product",
       });
 
       // Shopping cart item

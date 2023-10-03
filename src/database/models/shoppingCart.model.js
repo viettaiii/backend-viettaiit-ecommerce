@@ -12,7 +12,10 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(models.User, { foreignKey: "userId" });
 
       // Shopping cart item
-      this.hasMany(models.ShoppingCartItem, { foreignKey: "cartId" });
+      this.hasMany(models.ShoppingCartItem, {
+        foreignKey: "cartId",
+        as: "cartItems",
+      });
     }
   }
   ShoppingCart.init(
@@ -26,7 +29,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "ShoppingCart",   timestamps: true,
+      modelName: "ShoppingCart",
+      timestamps: true,
     }
   );
   return ShoppingCart;

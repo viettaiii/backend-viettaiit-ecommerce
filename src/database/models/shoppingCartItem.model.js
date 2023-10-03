@@ -12,16 +12,20 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(models.ShoppingCart, { foreignKey: "cartId" });
 
       // Product item
-      this.belongsTo(models.ProductItem, { foreignKey: "productItemId" });
+      this.belongsTo(models.ProductItem, {
+        foreignKey: "productItemId",
+        as: "productItem",
+      });
     }
   }
   ShoppingCartItem.init(
-    {  id: {
-      allowNull: false,
-      primaryKey: true,
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-    },
+    {
+      id: {
+        allowNull: false,
+        primaryKey: true,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+      },
       qty: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -29,7 +33,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "ShoppingCartItem",   timestamps: true,
+      modelName: "ShoppingCartItem",
+      timestamps: true,
     }
   );
   return ShoppingCartItem;

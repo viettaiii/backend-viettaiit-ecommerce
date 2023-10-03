@@ -61,5 +61,10 @@
          + get reviews of a product [GET] /reviews/products/:productId => OK
 
        
+  - shopping cart
+      - router
+        + Add new or update qty shopping cart item of a user [POST] /shopping-cart 
+        + Delete a shopping cart item of a user
+        + Get all shopping cart items of a user
  Ngay 6/9/2023
    - Tìm cách : upload file chỉ định lưu ảnh theo vị trí
