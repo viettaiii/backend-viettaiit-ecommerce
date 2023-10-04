@@ -15,6 +15,10 @@ module.exports = {
           type: Sequelize.INTEGER,
           allowNull: false,
         },
+        price: {
+          type: Sequelize.NUMBER,
+          allowNull: false,
+        },
         productItemId: {
           allowNull: false,
           type: Sequelize.UUID,
