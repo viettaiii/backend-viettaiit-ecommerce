@@ -23,10 +23,15 @@ module.exports = {
           type: Sequelize.STRING,
           allowNull: false,
         },
-        orderStatusId: {
+        status: {
+          type: Sequelize.ENUM,
+          values: ["pending", "completed"],
+        },
+        userId: {
+          allowNull: false,
           type: Sequelize.UUID,
           references: {
-            model: "orderStatuses",
+            model: "users",
             key: "id",
           },
           allowNull: false,

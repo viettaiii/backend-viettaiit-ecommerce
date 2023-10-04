@@ -11,6 +11,10 @@ module.exports = (sequelize, DataTypes) => {
 
       // Order Line
       this.hasMany(models.OrderLine, { foreignKey: "shopOrderId" });
+
+
+      // Users
+      this.belongsTo(models.User, { foreignKey: "userId" });
     }
   }
   ShopOrder.init(

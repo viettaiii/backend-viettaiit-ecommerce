@@ -16,24 +16,22 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   OrderLine.init(
-    {  id: {
-      allowNull: false,
-      primaryKey: true,
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-    },
+    {
+      id: {
+        allowNull: false,
+        primaryKey: true,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+      },
       qty: {
         type: DataTypes.NUMBER,
-        allowNull: false,
-      },
-      price: {
-        type: DataTypes.FLOAT,
         allowNull: false,
       },
     },
     {
       sequelize,
-      modelName: "OrderLine",   timestamps: true,
+      modelName: "OrderLine",
+      timestamps: true,
     }
   );
   return OrderLine;
