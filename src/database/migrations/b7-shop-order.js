@@ -16,7 +16,7 @@ module.exports = {
           defaultValue: new Date(),
         },
         orderTotal: {
-          type: Sequelize.FLOAT,
+          type: Sequelize.INTEGER,
           allowNull: false,
         },
         address: {
@@ -45,8 +45,11 @@ module.exports = {
         },
         country: {
           type: Sequelize.STRING,
-          allowNull: true,
           defaultValue: "VN",
+        },
+        note: {
+          type: Sequelize.STRING,
+          allowNull: true,
         },
         status: {
           type: Sequelize.ENUM,

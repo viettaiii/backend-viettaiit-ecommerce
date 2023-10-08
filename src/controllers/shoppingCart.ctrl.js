@@ -26,7 +26,7 @@ const addOrUpdateCartItemMe = async (req, res) => {
     await shoppingCartItem.save();
   }
   const response = createResponse({
-    message: "add new or update cart item",
+    message: "Thêm mục mới hoặc cập nhật giỏ hàng thành công",
     status: StatusCodes.OK,
     data: shoppingCartItem,
   });
@@ -81,16 +81,18 @@ const getCartMe = async (req, res) => {
     ],
   });
   let count = 0;
-  const total = cart.cartItems.reduce((acc, cur) => {
-    count += cur.qty;
-    return (
-      acc +
-      (cur.productItem.product.price -
-        (cur.productItem.product.price * cur.productItem.product.discount) /
-          100) *
-        cur.qty
-    );
-  }, 0);
+  let total = 0;
+  if (cart)
+    total = cart.cartItems.reduce((acc, cur) => {
+      count += cur.qty;
+      return (
+        acc +
+        (cur.productItem.product.price -
+          (cur.productItem.product.price * cur.productItem.product.discount) /
+            100) *
+          cur.qty
+      );
+    }, 0);
 
   const response = createResponse({
     message: "get all cart items of user",

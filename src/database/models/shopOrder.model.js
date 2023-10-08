@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       // Users
-      this.belongsTo(models.User, { foreignKey: "userId" });
+      this.belongsTo(models.User, { foreignKey: "userId", as: "user" });
     }
   }
   ShopOrder.init(
@@ -52,8 +52,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       country: {
         type: DataTypes.STRING,
-        allowNull: true,
         defaultValue: "VN",
+      },
+      note: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
       status: {
         type: DataTypes.ENUM,
@@ -65,7 +68,7 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: new Date(),
       },
       orderTotal: {
-        type: DataTypes.FLOAT,
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
     },

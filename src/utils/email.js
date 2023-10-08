@@ -59,20 +59,23 @@ const sendVerificationEmail = async ({
   verificationToken,
   origin,
 }) => {
-  const verifyEmail = `${origin}/account/verify-email?token=${verificationToken}&email=${email}`;
-  const message = `<p>Vui lòng click vào link bên dưới để có thể xác minh email của bạn : 
-    <a href="${verifyEmail}">Verify Email</a> </p>`;
+  const verifyEmail = `${origin}/tai-khoan/xac-minh-tai-khoan?token=${verificationToken}&email=${email}`;
+  const template = fs.readFileSync("src/templates/verify-email.html", "utf8");
+  const compiledTemplate = handlebars.compile(template);
+  const data = {
+    verifyEmail,
+    name,
+  };
+  const html = compiledTemplate(data);
   return await sendMail({
     to: email,
-    subject: "Xác minh email",
-    html: `<h2>Xin chào ${name}</h2>
-      ${message}
-      `,
+    subject: "Xác minh tài khoản",
+    html: `${html}`,
   });
 };
 
 const sendResetPasswordEmail = async ({ name, email, token, origin }) => {
-  const resetURL = `${origin}/account/reset-password?token=${token}&email=${email}`;
+  const resetURL = `${origin}/tai-khoan/dat-lai-mat-khau?token=${token}&email=${email}`;
   const message = `<p>Vui lòng click vào link bên dưới để có thể đặt lại mật khẩu của bạn : 
       <a href="${resetURL}">Đặt lại mặt khẩu</a></p>`;
   return await sendMail({

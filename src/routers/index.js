@@ -12,6 +12,7 @@ const routerOrders = require("./shopOrder.router");
 
 const createRouters = (app) => {
   app.use("/api/v1/auth", routerAuth);
+  app.use("/api/v1/orders", routerOrders);
   app.use("/api/v1/products", routerProducts);
   app.use("/api/v1/categories", routerCategories);
   app.use("/api/v1/providers", routerProviders);
@@ -21,7 +22,6 @@ const createRouters = (app) => {
   app.use("/api/v1/addresses", routerAddresses);
   app.use("/api/v1/reviews", routerReviews);
   app.use("/api/v1/shopping-cart", routerShoppingCart);
-  app.use("/api/v1/orders", routerOrders);
 };
 
 module.exports = createRouters;
