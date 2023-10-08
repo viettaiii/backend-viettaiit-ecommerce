@@ -36,7 +36,7 @@ const getAddressUser = async (req, res) => {
     params: { userId },
   } = req;
   const address = await Address.findOne({ where: { userId } });
-  if (!address) throw new NotFoundError(`address user not found`);
+  if (!address) throw new NotFoundError(`address Không tìm thấy người dùng`);
   const response = createResponse({
     message: "success",
     status: StatusCodes.OK,
@@ -51,7 +51,7 @@ const updateAddressUser = async (req, res) => {
     body: { phoneNumber, province, district, wards, country },
   } = req;
   const address = await Address.findOne({ where: { userId } });
-  if (!address) throw new NotFoundError(`address user not found`);
+  if (!address) throw new NotFoundError(`address Không tìm thấy người dùng`);
   if (phoneNumber) address.phoneNumber = phoneNumber;
   if (province) address.province = province;
   if (district) address.district = district;
@@ -70,7 +70,7 @@ const deleteAddressUser = async (req, res) => {
     params: { userId },
   } = req;
   const address = await Address.findOne({ where: { userId } });
-  if (!address) throw new NotFoundError(`address user not found`);
+  if (!address) throw new NotFoundError(`address Không tìm thấy người dùng`);
   await address.destroy();
   const response = createResponse({
     message: "deleted successfully",

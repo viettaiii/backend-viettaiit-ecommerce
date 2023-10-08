@@ -14,7 +14,7 @@ var format = /[`!@#$%^&*\=\[\]{};':"\\|,.<>\?~`]/;
 const getProductsStatic = async (req, res) => {
   const { count, rows } = await Product.findAndCountAll({});
   const response = createResponse({
-    message: "add new product successfully",
+    message: "Thêm sản phẩm mới thành công",
     status: StatusCodes.OK,
     total: count,
     data: rows,
@@ -113,7 +113,7 @@ const getProducts = async (req, res) => {
   });
 
   const response = createResponse({
-    message: "success",
+    message: "Thành công",
     status: StatusCodes.OK,
     page,
     perPage: limit,
@@ -128,21 +128,21 @@ const createProduct = async (req, res) => {
   const { name, image, categoryId, description, price, productItems } =
     req.body;
   if (name.match(format)) {
-    throw new BadRequestError("name must can`t contain special characters");
+    throw new BadRequestError("Tên SP không được chứa ký tự đặc biệt");
   }
   if (!name || !image || !categoryId || !description || !price)
-    throw new BadRequestError("please provide info");
+    throw new BadRequestError("Vui lòng cung cấp thông tin!");
   const isSlugHave = await Product.findOne({
     where: { slug: createSlug(name) },
   });
   if (!productItems) {
-    throw new BadRequestError("please provide sub product");
+    throw new BadRequestError("Vui lòng cung cấp sản phẩm phụ");
   }
   if (isSlugHave)
-    throw new BadRequestError(`name with ${name} is already in use`);
+    throw new BadRequestError(`Tên ${name} đã được sử dụng`);
   const isCategoryHave = await Category.findByPk(categoryId);
   if (!isCategoryHave) {
-    throw new NotFoundError(`Category with id ${categoryId} not found!`);
+    throw new NotFoundError(`Không tìm thấy danh mục có id ${categoryId}!`);
   }
 
   req.body.image = image;
@@ -158,7 +158,7 @@ const createProduct = async (req, res) => {
     );
 
     const response = createResponse({
-      message: "add new product successfully",
+      message: "Thêm sản phẩm mới thành công",
       status: StatusCodes.CREATED,
       data: product,
     });
@@ -192,10 +192,10 @@ const getProduct = async (req, res) => {
       },
     ],
   });
-  if (!product) throw new NotFoundError("product not found!");
+  if (!product) throw new NotFoundError("Sản phẩm không có!");
 
   const response = createResponse({
-    message: "get product detail successfully",
+    message: "Nhận thông tin chi tiết sản phẩm thành công",
     status: StatusCodes.CREATED,
     data: product,
   });
@@ -210,7 +210,7 @@ const updateProduct = async (req, res) => {
 
   const product = await Product.findOne({ where: { slug } });
   if (!product) {
-    throw new NotFoundError("product not found");
+    throw new NotFoundError("Sản phẩm không tìm thấy");
   }
   // product.name = name;
   product.image = image;
@@ -246,7 +246,7 @@ const updateProduct = async (req, res) => {
   }
   await product.save();
   const response = createResponse({
-    message: "updated successfully product",
+    message: "Cập nhật sản phẩm thành công",
     status: StatusCodes.OK,
     data: product,
   });
@@ -260,11 +260,11 @@ const deleteProduct = async (req, res) => {
   } = req;
   const product = await Product.findOne({ where: { slug } });
   if (!product) {
-    throw new NotFoundError("product not found");
+    throw new NotFoundError("Sản phẩm không tìm thấy");
   }
   await product.destroy();
   const response = createResponse({
-    message: "deleted successfully product",
+    message: "Xóa sản phẩm thành công",
     status: StatusCodes.OK,
   });
   res.status(response.status).json(response);
@@ -276,23 +276,23 @@ const addProductItem = async (req, res) => {
     params: { slug },
     body: { colorId, image, qtyInStock },
   } = req;
-  if (!colorId) throw new BadRequestError("please provide a color");
-  if (!image) throw new BadRequestError("please provide a image");
+  if (!colorId) throw new BadRequestError("Vui lòng cung cấp một màu sắc");
+  if (!image) throw new BadRequestError("Vui lòng cung cấp một hình ảnh");
   req.body.image = process.env.BACKEND_URL + "/static/uploads/" + image;
   if (!qtyInStock)
-    throw new BadRequestError("please provide a quantity in stock");
+    throw new BadRequestError("Vui lòng cung cấp số lượng trong kho");
   const product = await Product.findOne({ where: { slug } });
   if (!product) {
-    throw new NotFoundError("product not found");
+    throw new NotFoundError("Sản phẩm không tìm thấy");
   }
   const isExistItem = await ProductItem.findOne({
     where: { colorId, productId: product.id },
   });
-  if (isExistItem) throw new ConflictError("product already in use");
+  if (isExistItem) throw new ConflictError("Sản phẩm đã tồn tại");
   req.body.productId = product.id;
   await ProductItem.create({ ...req.body });
   const response = createResponse({
-    message: "added successfully product item",
+    message: "Thêm sản phẩm thành công",
     status: StatusCodes.OK,
   });
   res.status(response.status).json(response);
@@ -302,7 +302,7 @@ const deleteManyProduct = async (req, res) => {
   const { slugs } = req.body;
   await Product.destroy({ where: { slug: slugs } });
   const response = createResponse({
-    message: "deleted successfully many product",
+    message: "Xóa nhiều sản phẩm thành công",
     status: StatusCodes.OK,
   });
   res.status(response.status).json(response);
@@ -317,7 +317,7 @@ const getProductHotSales = async (req, res) => {
   });
 
   const response = createResponse({
-    message: "get products hot sales",
+    message: "Nhận sản phẩm giảm giá",
     status: StatusCodes.OK,
     data: products,
   });
@@ -346,7 +346,7 @@ const getProductsCategory = async (req, res) => {
     category = "productsAppleWatch";
   }
   const response = createResponse({
-    message: `get products category ${categoryName}`,
+    message: `Lấy danh mục sản phẩm ${categoryName}`,
     status: StatusCodes.OK,
     category,
     data: products,

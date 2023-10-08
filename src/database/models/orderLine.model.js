@@ -9,10 +9,16 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // Product Item
-      this.belongsTo(models.ProductItem, { foreignKey: "productItemId" });
+      this.belongsTo(models.ProductItem, {
+        foreignKey: "productItemId",
+        as: "productItem",
+      });
 
       // Shop Order
-      this.belongsTo(models.ShopOrder, { foreignKey: "shopOrderId" });
+      this.belongsTo(models.ShopOrder, {
+        foreignKey: "shopOrderId",
+        as: "shopOrder",
+      });
     }
   }
   OrderLine.init(
@@ -24,11 +30,11 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4,
       },
       price: {
-        type: DataTypes.NUMBER,
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
       qty: {
-        type: DataTypes.NUMBER,
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
     },

@@ -4,7 +4,7 @@ const { Category } = require("../database/models");
 const getCategories = async (req, res) => {
   const categories = await Category.findAll({});
   const response = createResponse({
-    message: "success",
+    message: "Thành công",
     status: StatusCodes.OK,
     data: categories,
   });

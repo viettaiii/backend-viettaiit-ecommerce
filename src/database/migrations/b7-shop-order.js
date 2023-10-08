@@ -19,13 +19,39 @@ module.exports = {
           type: Sequelize.FLOAT,
           allowNull: false,
         },
-        shippingAddress: {
+        address: {
           type: Sequelize.STRING,
           allowNull: false,
         },
+        fullName: {
+          type: Sequelize.STRING,
+          allowNull: false,
+        },
+        phoneNumber: {
+          type: Sequelize.STRING,
+          allowNull: false,
+        },
+        province: {
+          type: Sequelize.STRING,
+          allowNull: false,
+        },
+        district: {
+          type: Sequelize.STRING,
+          allowNull: false,
+        },
+        ward: {
+          type: Sequelize.STRING,
+          allowNull: false,
+        },
+        country: {
+          type: Sequelize.STRING,
+          allowNull: true,
+          defaultValue: "VN",
+        },
         status: {
           type: Sequelize.ENUM,
-          values: ["pending", "completed"],
+          values: ["pending", "delivering", "canceled", "completed"],
+          defaultValue: "pending",
         },
         userId: {
           allowNull: false,

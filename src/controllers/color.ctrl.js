@@ -5,7 +5,7 @@ const { Color } = require("../database/models");
 const getColors = async (req, res) => {
   const colors = await Color.findAll({});
   const response = createResponse({
-    message: "success",
+    message: "Thành công",
     status: StatusCodes.OK,
     data: colors,
   });

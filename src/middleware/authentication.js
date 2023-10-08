@@ -18,7 +18,7 @@ const authenticatePermission = (...roles) => {
     if (roles.includes(req.userInfo.role)) {
       next();
     } else {
-      throw new ForBiddenError("forbidden permission");
+      throw new ForBiddenError("Cấm");
     }
   };
 };

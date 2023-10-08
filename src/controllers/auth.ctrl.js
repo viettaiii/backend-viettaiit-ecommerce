@@ -19,16 +19,16 @@ const { createResponse } = require("../utils/createResponse");
 const register = async (req, res) => {
   const { name, email, password } = req.body;
   if (!name || !email) {
-    throw new BadRequestError("information is required");
+    throw new BadRequestError("Thông tin yêu cầu");
   }
   if (password.length < 5) {
     throw new UnprocessableEntityError(
-      "password is required and must be at least 5 characters"
+      "Mật khẩu là bắt buộc và phải có ít nhất 5 ký tự"
     );
   }
   const user = await User.findOne({ where: { email } });
   if (user) {
-    throw new ConflictError("email is already in use");
+    throw new ConflictError("Email đã được sử dụng!");
   }
   const newUser = {
     name,
@@ -37,7 +37,7 @@ const register = async (req, res) => {
   };
   await User.create(newUser);
   const response = createResponse({
-    message: "add new user success",
+    message: "Tạo tài khoản thành công!",
     status: StatusCodes.CREATED,
   });
   res.status(response.status).json(response);
@@ -45,20 +45,20 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   const { email, password } = req.body;
   if (!password || !email) {
-    throw new BadRequestError("please provide info!");
+    throw new BadRequestError("Vui lòng cung cấp thông tin!");
   }
   if (password.length < 5) {
     throw new UnprocessableEntityError(
-      "password is required and must be at least 6 characters"
+      "Mật khẩu là bắt buộc và phải có ít nhất 6 ký tự"
     );
   }
   const user = await User.findOne({ where: { email } });
   if (!user) {
-    throw new NotFoundError("user not found");
+    throw new NotFoundError("Không tìm thấy người dùng");
   }
   const isMatch = await comparePassword(password, user.password);
   if (!isMatch) {
-    throw new UnauthorizedError("unauthorized");
+    throw new UnauthorizedError("Không được phép");
   }
   if (!user.isVerified) {
     const origin = process.env.FRONTEND_CLIENT_URL;
@@ -72,7 +72,7 @@ const login = async (req, res) => {
     });
     await user.save();
     throw new UnauthorizedError(
-      "please check your email to verify your account."
+      "Vui lòng kiểm tra email để xác minh tài khoản của bạn."
     );
   }
   let userShow = {
@@ -82,7 +82,7 @@ const login = async (req, res) => {
     role: user.role,
   };
   const response = createResponse({
-    message: "success",
+    message: "Đăng nhập thành công!",
     status: StatusCodes.OK,
     data: userShow,
   });
@@ -123,21 +123,21 @@ const login = async (req, res) => {
 const verifyEmail = async (req, res) => {
   const { verificationToken, email } = req.body;
   if (!verificationToken || !email) {
-    throw new BadRequestError("please provide infor!");
+    throw new BadRequestError("Vui lòng cung cấp thông tin!!");
   }
   const user = await User.findOne({ where: { email } });
   if (!user) {
-    throw new NotFoundError("user not found");
+    throw new NotFoundError("Không tìm thấy người dùng");
   }
   if (verificationToken !== user.verificationToken) {
-    throw new ForBiddenError("forbidden");
+    throw new ForBiddenError("Cấm");
   }
   user.isVerified = true;
   user.verifiedDate = new Date();
   user.verificationToken = null;
   await user.save();
   const response = createResponse({
-    message: "verified successfully",
+    message: "Xác minh thành công",
     status: StatusCodes.OK,
   });
   res.status(response.status).json(response);
@@ -145,11 +145,11 @@ const verifyEmail = async (req, res) => {
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
   if (!email) {
-    throw new BadRequestError("please provide email!");
+    throw new BadRequestError("Vui lòng cung cấp email!!");
   }
   const user = await User.findOne({ where: { email } });
   if (!user) {
-    throw new NotFoundError("email not found");
+    throw new NotFoundError("Email không tìm thấy");
   }
   user.passwordToken = createString();
   user.passwordTokenExpire = new Date(Date.now() + 1000 * 60 * 1); // Thời gian hiện tại + 10 phút
@@ -161,7 +161,7 @@ const forgotPassword = async (req, res) => {
     origin: process.env.FRONTEND_CLIENT_URL,
   });
   const response = createResponse({
-    message: "check your email to reset your password in 10 minutes",
+    message: "Vui lòng, Kiểm tra email của bạn để đặt lại mật khẩu sau 10 phút",
 
     status: StatusCodes.ACCEPTED,
   });
@@ -170,11 +170,11 @@ const forgotPassword = async (req, res) => {
 const resetPassword = async (req, res) => {
   const { passwordToken, email, password, confirmPassword } = req.body;
   if (!passwordToken || !email) {
-    throw new BadRequestError("please provide info");
+    throw new BadRequestError("Vui lòng cung cấp thông tin!");
   }
   const user = await User.findOne({ where: { email } });
   if (!user) {
-    throw new NotFoundError("user not found");
+    throw new NotFoundError("Không tìm thấy người dùng");
   }
 
   const currentDate = new Date(Date.now());
@@ -184,18 +184,18 @@ const resetPassword = async (req, res) => {
       passwordToken === user.passwordToken
     )
   ) {
-    throw new UnauthorizedError("token is invalid");
+    throw new UnauthorizedError("Mã không hợp lệ");
   }
 
   if (password !== confirmPassword) {
-    throw new BadRequestError("password is incorrect");
+    throw new BadRequestError("Mật khẩu không hợp lệ");
   }
   user.password = await hashPassword(password);
   user.passwordToken = null;
   user.passwordTokenExpire = null;
   await user.save();
   const response = createResponse({
-    message: "reset password successfully",
+    message: "Đặt lại mật khẩu thành công",
     status: StatusCodes.OK,
   });
   res.status(response.status).json(response);
@@ -205,7 +205,7 @@ const logout = async (req, res) => {
   res.clearCookie("access_token");
   res.clearCookie("refresh_token");
   const response = createResponse({
-    message: "logout successfully",
+    message: "Đăng xuất thành công",
     status: StatusCodes.OK,
   });
   res.status(response.status).json(response);

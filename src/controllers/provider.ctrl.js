@@ -5,7 +5,7 @@ const { Provider } = require("../database/models");
 const getProviders = async (req, res) => {
   const providers = await Provider.findAll({});
   const response = createResponse({
-    message: "get all providers successfully",
+    message: "Nhận tất cả các nhà cung cấp thành công",
     status: StatusCodes.OK,
     data: providers,
   });

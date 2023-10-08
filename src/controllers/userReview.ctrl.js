@@ -28,18 +28,18 @@ const createReview = async (req, res) => {
   const { ratingValue, comment, productId } = req.body;
   const { userId } = req.userInfo;
   if (!ratingValue || !comment || !userId || !productId)
-    throw new BadRequestError("please provide a rating, comment and product");
+    throw new BadRequestError("Vui lòng cung cấp đầy đủ thông tin!");
   if (ratingValue > 6) throw new BadRequestError("rating  must be 1 --> 5 ");
   const isProduct = await Product.findByPk(productId);
-  if (!isProduct) throw new NotFoundError("product not found!");
+  if (!isProduct) throw new NotFoundError("Sản phẩm không tìm thấy!");
   const isReview = await UserReview.findOne({ where: { userId, productId } });
   if (isReview)
     throw new ConflictError(
-      "everybody only have a review in a product and can update the rating and comment"
+      "Mọi người chỉ có đánh giá về một sản phẩm và có thể cập nhật xếp hạng và nhận xét"
     );
   await UserReview.create({ ...req.body, userId });
   const response = createResponse({
-    message: "created successfully",
+    message: "Thêm đánh giá thánh công!",
     status: StatusCodes.OK,
   });
   res.status(response.status).json(response);
@@ -48,7 +48,7 @@ const createReview = async (req, res) => {
 const getReview = async (req, res) => {
   const { reviewId } = req.params;
   const review = await UserReview.findByPk(reviewId);
-  if (!review) throw new NotFoundError("review not found!");
+  if (!review) throw new NotFoundError("Đánh giá không tìm thấy!");
   const response = createResponse({
     message: "success",
     status: StatusCodes.OK,
@@ -60,9 +60,9 @@ const getReview = async (req, res) => {
 const deleteReview = async (req, res) => {
   const { reviewId } = req.params;
   const review = await UserReview.findByPk(reviewId);
-  if (!review) throw new NotFoundError("review not found!");
+  if (!review) throw new NotFoundError("Đánh giá không tìm thấy!");
   const isCheckPermission = checkPermission(review.userId, req.userInfo);
-  if (!isCheckPermission) throw new ForBiddenError("permission denied!");
+  if (!isCheckPermission) throw new ForBiddenError("Sự cho phép bị từ chối!");
   await review.destroy();
   const response = createResponse({
     message: "deleted successfully",
@@ -75,11 +75,11 @@ const updateReview = async (req, res) => {
   const { reviewId } = req.params;
   const { ratingValue, comment } = req.body;
   if (!ratingValue || !comment)
-    throw new BadRequestError("please provide rating or comment!");
+    throw new BadRequestError("Vui lòng cung cấp đầy đủ thông tin!");
   const review = await UserReview.findByPk(reviewId);
-  if (!review) throw new NotFoundError("review not found!");
+  if (!review) throw new NotFoundError("Đánh giá không tìm thấy!");
   const isCheckPermission = checkPermission(review.userId, req.userInfo);
-  if (!isCheckPermission) throw new ForBiddenError("permission denied!");
+  if (!isCheckPermission) throw new ForBiddenError("Sự cho phép bị từ chối!");
   if (ratingValue) review.ratingValue = ratingValue;
   if (comment) review.comment = comment;
   await review.save();
