@@ -31,6 +31,11 @@ module.exports = {
         allowNull: false,
         defaultValue: "Việt Nam",
       },
+      residence: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+
       userId: {
         type: Sequelize.UUID,
         references: {

@@ -48,6 +48,9 @@ const getOrderDetail = async (req, res) => {
 };
 const addOrderMe = async (req, res) => {
   const { userId, email } = req.userInfo;
+  const address = {
+    
+  }
   const {
     ordersLine,
     address,
