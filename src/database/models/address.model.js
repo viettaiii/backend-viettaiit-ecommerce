@@ -49,8 +49,12 @@ module.exports = (sequelize, DataTypes) => {
       },
       country: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
         defaultValue: "Việt Nam",
+      },
+      using: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
       },
     },
     {

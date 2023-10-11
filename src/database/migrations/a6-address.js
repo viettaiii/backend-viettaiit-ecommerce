@@ -28,14 +28,17 @@ module.exports = {
       },
       country: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
         defaultValue: "Việt Nam",
       },
       residence: {
         type: Sequelize.STRING,
         allowNull: true,
       },
-
+      using: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+      },
       userId: {
         type: Sequelize.UUID,
         references: {

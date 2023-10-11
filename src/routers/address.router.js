@@ -1,19 +1,24 @@
 const router = require("express").Router();
 const {
-  addAddressToUser,
-  getAddressUser,
-  updateAddressUser,
-  deleteAddressUser,
-  getAllAddresses,
+  addAddressMe,
+  getAddressMe,
+  updateAddressMe,
+  deleteAddressMe,
+  getAllAddressesMe,
 } = require("../controllers/address.ctrl");
-
+const {
+  authenticatePermission,
+  authenticateUser,
+} = require("../middleware/authentication");
 router
-  .route("/users/:userId")
-  .post(addAddressToUser)
-  .get(getAddressUser)
-  .patch(updateAddressUser)
-  .delete(deleteAddressUser);
+  .route("/")
+  .get(authenticateUser, getAllAddressesMe)
+  .post(authenticateUser, addAddressMe);
+router
+  .route("/:id")
+  .patch(authenticateUser, updateAddressMe)
+  .delete(authenticateUser, deleteAddressMe)
+  .get(authenticateUser, getAddressMe);
 
-router.route("/").get(getAllAddresses);
 
 module.exports = router;
