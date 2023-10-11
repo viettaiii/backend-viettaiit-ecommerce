@@ -29,15 +29,17 @@ module.exports = {
       country: {
         type: Sequelize.STRING,
         allowNull: false,
+        defaultValue: "Việt Nam",
       },
       userId: {
         type: Sequelize.UUID,
         references: {
           model: "users",
           key: "id",
-        },allowNull: false,
-        onDelete:  'cascade',
-        onUpdate: 'cascade',
+        },
+        allowNull: false,
+        onDelete: "cascade",
+        onUpdate: "cascade",
       },
       createdAt: {
         type: Sequelize.DATE,

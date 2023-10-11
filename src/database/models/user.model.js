@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(models.UserReview, { foreignKey: "userId" });
 
       // Address
-      this.hasOne(models.Address, { foreignKey: "userId" });
+      this.hasMany(models.Address, { foreignKey: "userId", as: "addresses" });
 
       // orders
       this.hasMany(models.ShopOrder, {

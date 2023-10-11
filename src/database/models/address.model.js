@@ -9,18 +9,23 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // User
-      this.belongsTo(models.User, { foreignKey: "userId" });
+      this.belongsTo(models.User, { foreignKey: "userId", as: "user" });
 
-      // Shop Order
+      // shop order
+      this.hasMany(models.ShopOrder, {
+        foreignKey: "addressId",
+        as: "orders",
+      });
     }
   }
   Address.init(
-    {  id: {
-      allowNull: false,
-      primaryKey: true,
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-    },
+    {
+      id: {
+        allowNull: false,
+        primaryKey: true,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+      },
       phoneNumber: {
         type: DataTypes.STRING,
         allowNull: true,
@@ -41,11 +46,13 @@ module.exports = (sequelize, DataTypes) => {
       country: {
         type: DataTypes.STRING,
         allowNull: false,
+        defaultValue: "Việt Nam",
       },
     },
     {
       sequelize,
-      modelName: "Address",   timestamps: true,
+      modelName: "Address",
+      timestamps: true,
     }
   );
   return Address;

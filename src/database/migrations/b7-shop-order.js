@@ -19,34 +19,6 @@ module.exports = {
           type: Sequelize.INTEGER,
           allowNull: false,
         },
-        address: {
-          type: Sequelize.STRING,
-          allowNull: false,
-        },
-        fullName: {
-          type: Sequelize.STRING,
-          allowNull: false,
-        },
-        phoneNumber: {
-          type: Sequelize.STRING,
-          allowNull: false,
-        },
-        province: {
-          type: Sequelize.STRING,
-          allowNull: false,
-        },
-        district: {
-          type: Sequelize.STRING,
-          allowNull: false,
-        },
-        ward: {
-          type: Sequelize.STRING,
-          allowNull: false,
-        },
-        country: {
-          type: Sequelize.STRING,
-          defaultValue: "VN",
-        },
         note: {
           type: Sequelize.STRING,
           allowNull: true,
@@ -61,6 +33,17 @@ module.exports = {
           type: Sequelize.UUID,
           references: {
             model: "users",
+            key: "id",
+          },
+          allowNull: false,
+          onDelete: "cascade",
+          onUpdate: "cascade",
+        },
+        addressId: {
+          allowNull: false,
+          type: Sequelize.UUID,
+          references: {
+            model: "addresses",
             key: "id",
           },
           allowNull: false,

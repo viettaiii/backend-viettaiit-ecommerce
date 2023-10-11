@@ -7,7 +7,10 @@ const { sendMailOrderedSuccessfully } = require("../utils/email");
 const getOrdersMe = async (req, res) => {
   const { userId } = req.userInfo;
 
-  const orders = await ShopOrder.findAll({ where: { userId } });
+  const orders = await ShopOrder.findAll({
+    where: { userId },
+    order: [["createdAt", "desc"]],
+  });
   const response = createResponse({
     message: "Lấy tất cả đơn hàng",
     status: StatusCodes.OK,
@@ -92,6 +95,7 @@ const addOrderMe = async (req, res) => {
         },
         { transaction: t }
       );
+      await ShoppingCart.destroy({ where: { userId } }, { transaction: t });
     });
     const dataSendMail = {
       info: {
@@ -110,10 +114,11 @@ const addOrderMe = async (req, res) => {
       productItems,
     };
     await sendMailOrderedSuccessfully(dataSendMail);
-    await ShoppingCart.destroy({ where: { userId } }, { transaction: t });
+
     const response = createResponse({
       message: "Đặt hàng thành công, Kiểm tra email để xác nhận đơn hàng",
       status: StatusCodes.OK,
+      data: order,
     });
     return res.status(response.status).json(response);
   } catch (error) {

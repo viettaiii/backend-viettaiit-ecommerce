@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
 
       // Users
       this.belongsTo(models.User, { foreignKey: "userId", as: "user" });
+      this.belongsTo(models.Address, { foreignKey: "addressId", as: "address" });
     }
   }
   ShopOrder.init(
@@ -25,34 +26,6 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
-      },
-      address: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      fullName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      phoneNumber: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      province: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      district: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      ward: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      country: {
-        type: DataTypes.STRING,
-        defaultValue: "VN",
       },
       note: {
         type: DataTypes.STRING,

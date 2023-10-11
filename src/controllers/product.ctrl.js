@@ -138,8 +138,7 @@ const createProduct = async (req, res) => {
   if (!productItems) {
     throw new BadRequestError("Vui lòng cung cấp sản phẩm phụ");
   }
-  if (isSlugHave)
-    throw new BadRequestError(`Tên ${name} đã được sử dụng`);
+  if (isSlugHave) throw new BadRequestError(`Tên ${name} đã được sử dụng`);
   const isCategoryHave = await Category.findByPk(categoryId);
   if (!isCategoryHave) {
     throw new NotFoundError(`Không tìm thấy danh mục có id ${categoryId}!`);
@@ -324,6 +323,27 @@ const getProductHotSales = async (req, res) => {
   res.status(response.status).json(response);
 };
 
+const getProductsPhuKien = async (req, res) => {
+  const products = await Product.findAll({
+    include: [
+      {
+        association: "category",
+        attributes: { exclude: ["createdAt", "updatedAt"] },
+        where: { categoryName: "Phụ kiện" },
+      },
+    ],
+    offset: 0,
+    limit: 10,
+  });
+
+  const response = createResponse({
+    message: "Nhận sản phẩm giảm giá",
+    status: StatusCodes.OK,
+    data: products,
+  });
+  res.status(response.status).json(response);
+};
+
 // get product hot sales
 const getProductsCategory = async (req, res) => {
   const { categoryName } = req.params;
@@ -365,4 +385,5 @@ module.exports = {
   deleteManyProduct,
   getProductHotSales,
   getProductsCategory,
+  getProductsPhuKien,
 };
