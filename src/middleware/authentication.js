@@ -1,15 +1,26 @@
 const { UnauthorizedError, ForBiddenError } = require("../errors");
-const { verifyValue } = require("../utils/jwt");
+const { createString } = require("../utils/crypto");
+const { verifyValue, attachCookiesToResponse } = require("../utils/jwt");
 
 const authenticateUser = (req, res, next) => {
   const token = req.cookies.access_token;
   if (!token) throw new UnauthorizedError("unauthorized");
   try {
-    const { data } = verifyValue(token);
-    req.userInfo = data;
+    const decoded = verifyValue(token); 
+    req.userInfo = decoded.data;
     next();
   } catch (error) {
-    next(error);
+    if (error.message === "jwt expired") {
+      const refreshToken = req.cookies.refresh_token;
+      const decodedToken = verifyValue(refreshToken);
+      const data = decodedToken.data.infoUser;
+      const newRefreshToken = createString();
+      attachCookiesToResponse(res, data, newRefreshToken);
+      req.userInfo = data;
+      next();
+    } else {
+      throw new UnauthorizedError("unauthorized");
+    }
   }
 };
 
