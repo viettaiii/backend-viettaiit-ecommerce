@@ -9,7 +9,7 @@ const {
   addProductItem,
   deleteManyProduct,
   getProductHotSales,
-  getProductsCategory,
+  getProductsCategory,getProductsPhuKien
 } = require("../controllers/product.ctrl");
 const {
   authenticatePermission,
@@ -19,6 +19,7 @@ router.get("/static", getProductsStatic);
 
 // GET PRODUCT HOT SALE
 router.route("/hot-sales").get(getProductHotSales);
+router.route("/phu-kien").get(getProductsPhuKien);
 
 // GET PRODUCT THEO LOAI
 router.route("/categories/:categoryName").get(getProductsCategory);
