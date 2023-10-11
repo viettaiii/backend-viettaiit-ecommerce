@@ -1,4 +1,8 @@
-const { ShopOrder, ShoppingCart, sequelize } = require("../database/models");
+const {
+  ShopOrder,
+  sequelize,
+  Address,
+} = require("../database/models");
 const { BadRequestError, NotFoundError, ConflictError } = require("../errors");
 const { StatusCodes } = require("http-status-codes");
 const { createResponse } = require("../utils/createResponse");
@@ -48,33 +52,27 @@ const getOrderDetail = async (req, res) => {
 };
 const addOrderMe = async (req, res) => {
   const { userId, email } = req.userInfo;
-  const address = {
-    
-  }
-  const {
-    ordersLine,
-    address,
-    fullName,
-    phoneNumber,
-    province,
-    district,
-    ward,
-    productItems,
-    note,
-  } = req.body;
-  if (
-    !ordersLine ||
-    !address ||
-    !phoneNumber ||
-    !province ||
-    !district ||
-    !ward
-  )
+
+  const { ordersLine, address, fullName, productItems, note } = req.body;
+
+  if (!ordersLine)
     throw new BadRequestError("Vui lòng cung cấp tất cả các giá trị!");
+  address.userId = userId;
   const orderTotal = ordersLine.reduce(
     (acc, cur) => acc + cur.price * cur.qty,
     0
   );
+
+  const addressExists = await Address.findOne({
+    where: address,
+  });
+
+  if (!addressExists) {
+    const newAddress = await Address.create(address);
+    address.id = newAddress.id;
+  } else {
+    address.id = addressExists.id;
+  }
   try {
     let order;
     await sequelize.transaction(async (t) => {
@@ -82,15 +80,11 @@ const addOrderMe = async (req, res) => {
         {
           orderTotal,
           orderDate: new Date(),
-          address,
           fullName,
-          phoneNumber,
-          province,
-          district,
-          ward,
           note,
           userId,
           ordersLine: ordersLine,
+          addressId: address.id,
         },
         {
           include: ["ordersLine"],
@@ -98,19 +92,19 @@ const addOrderMe = async (req, res) => {
         },
         { transaction: t }
       );
-      await ShoppingCart.destroy({ where: { userId } }, { transaction: t });
+      // await ShoppingCart.destroy({ where: { userId } }, { transaction: t });
     });
     const dataSendMail = {
       info: {
         orderId: order.id,
         orderTotal: order.orderTotal,
         orderDate: order.orderDate,
-        address: order.address,
+        residence: address.residence,
         fullName: order.fullName,
-        phoneNumber: order.phoneNumber,
-        province: order.province,
-        district: order.district,
-        ward: order.ward,
+        phoneNumber: address.phoneNumber,
+        province: address.province,
+        district: address.district,
+        ward: address.ward,
         note: order.note,
         email: email,
       },
