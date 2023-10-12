@@ -7,7 +7,10 @@ const getAllAddressesMe = async (req, res) => {
   const {
     userInfo: { userId },
   } = req;
-  const { count, rows } = await Address.findAndCountAll({ where: { userId } });
+  const { count, rows } = await Address.findAndCountAll({
+    where: { userId },
+    order: [["using", "desc"]],
+  });
   const response = createResponse({
     message: "get addresses success",
     status: StatusCodes.CREATED,
@@ -19,10 +22,10 @@ const getAllAddressesMe = async (req, res) => {
 const addAddressMe = async (req, res) => {
   const {
     userInfo: { userId },
-    body: { phoneNumber, province, district, ward },
+    body: { phoneNumber, province, district, ward, fullName },
   } = req;
 
-  if (!phoneNumber || !province || !district || !ward)
+  if (!phoneNumber || !province || !district || !ward || !fullName)
     throw new BadRequestError("info is required");
   // const isAddress = await Address.findOne({ where: { userId } });
   // if (isAddress) throw new BadRequestError("address user is already in use");
@@ -56,7 +59,17 @@ const updateAddressMe = async (req, res) => {
   const {
     params: { id },
     userInfo: { userId },
-    body: { phoneNumber, province, district, ward, country  ,residence},
+    body: {
+      phoneNumber,
+      province,
+      district,
+      ward,
+      country,
+      residence,
+      fullName,
+      note,
+      using,
+    },
   } = req;
   const address = await Address.findOne({ where: { id, userId } });
   if (!address) throw new NotFoundError(`Không tìm thấy người dùng`);
@@ -65,6 +78,9 @@ const updateAddressMe = async (req, res) => {
   if (district) address.district = district;
   if (ward) address.ward = ward;
   if (country) address.country = country;
+  if (fullName) address.fullName = fullName;
+  if (note) address.note = note;
+  if (using) address.using = using;
   if (residence) address.residence = residence;
   await address.save();
   const response = createResponse({

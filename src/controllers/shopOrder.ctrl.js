@@ -1,8 +1,4 @@
-const {
-  ShopOrder,
-  sequelize,
-  Address,
-} = require("../database/models");
+const { ShopOrder, sequelize, Address } = require("../database/models");
 const { BadRequestError, NotFoundError, ConflictError } = require("../errors");
 const { StatusCodes } = require("http-status-codes");
 const { createResponse } = require("../utils/createResponse");
@@ -53,7 +49,7 @@ const getOrderDetail = async (req, res) => {
 const addOrderMe = async (req, res) => {
   const { userId, email } = req.userInfo;
 
-  const { ordersLine, address, fullName, productItems, note } = req.body;
+  const { ordersLine, address, productItems } = req.body;
 
   if (!ordersLine)
     throw new BadRequestError("Vui lòng cung cấp tất cả các giá trị!");
@@ -80,8 +76,6 @@ const addOrderMe = async (req, res) => {
         {
           orderTotal,
           orderDate: new Date(),
-          fullName,
-          note,
           userId,
           ordersLine: ordersLine,
           addressId: address.id,
@@ -99,13 +93,7 @@ const addOrderMe = async (req, res) => {
         orderId: order.id,
         orderTotal: order.orderTotal,
         orderDate: order.orderDate,
-        residence: address.residence,
-        fullName: order.fullName,
-        phoneNumber: address.phoneNumber,
-        province: address.province,
-        district: address.district,
-        ward: address.ward,
-        note: order.note,
+        ...address,
         email: email,
       },
       productItems,

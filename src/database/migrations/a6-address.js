@@ -35,6 +35,14 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
+      fullName: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      note: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
       using: {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
