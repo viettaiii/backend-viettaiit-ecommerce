@@ -18,23 +18,23 @@ module.exports = {
         value: "gray",
       },
       {
-        id: "fcb0d500-b0d8-494a-95e1-1b2d23619770",
+        id: "fcb0d500-b0d8-494a-95e11b2d23619770",
         value: "black",
       },
       {
-        id: uuid(),
+        id: "fzc00-b0d8-034a-95e1-1b2d23619770",
         value: "violet",
       },
       {
-        id: uuid(),
+        id: "fcb0d500-b0d8-034a-95e1-1b1d619770",
         value: "pink",
       },
       {
-        id: uuid(),
+        id: "fcb0d500-b0d8-034a-95e1-1b2d2619770",
         value: "orange",
       },
       {
-        id: uuid(),
+        id: "fcb0d500-b0d8-034a-95e1-1b23319770",
         value: "white",
       },
     ]);

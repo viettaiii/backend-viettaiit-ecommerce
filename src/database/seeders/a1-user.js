@@ -33,6 +33,26 @@ module.exports = {
         isVerified: 1,
         verifiedDate: "2023-08-05 13:43:09",
       },
+      {
+        id: uuid(),
+        name: "viettaii2003",
+        email: "viettaii2003@gmail.com",
+        password:
+          "$2a$10$H3StP.pXYjnvLWRpm532oOPtOCHaTjj/0KT1NvKp6KpMJ9DZQuT92",
+        role: "client",
+        isVerified: 1,
+        verifiedDate: "2023-08-05 13:43:09",
+      },
+      {
+        id: uuid(),
+        name: "test",
+        email: "test@gmail.com",
+        password:
+          "$2a$10$H3StP.pXYjnvLWRpm532oOPtOCHaTjj/0KT1NvKp6KpMJ9DZQuT92",
+        role: "client",
+        isVerified: 1,
+        verifiedDate: "2023-08-05 13:43:09",
+      },
     ]);
   },
   down: (queryInterface, Sequelize) => {

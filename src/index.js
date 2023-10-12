@@ -16,7 +16,7 @@ const configViewEngine = require("./database/config/viewEngine");
 const createRouters = require("./routers");
 app.use(
   cors({
-    origin: process.env.FRONTEND_CLIENT_URL,
+    origin: [process.env.FRONTEND_CLIENT_URL, "http://localhost:3001/"],
     credentials: true,
   })
 );
