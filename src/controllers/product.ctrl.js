@@ -9,7 +9,7 @@ const {
 const { Op } = require("sequelize");
 const { createResponse } = require("../utils/createResponse");
 const { createSlug } = require("../utils/slug");
-var format = /[`!@#$%^&*\=\[\]{};':"\\|,.<>\?~`]/;
+var format = /[`!@#$%^&*\=\[\]{};':"\\|,<>\?~`]/;
 
 const getProductsStatic = async (req, res) => {
   const { count, rows } = await Product.findAndCountAll({});

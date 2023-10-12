@@ -1,4 +1,9 @@
-const { ShopOrder, sequelize, Address } = require("../database/models");
+const {
+  ShopOrder,
+  sequelize,
+  Address,
+  ShoppingCart,
+} = require("../database/models");
 const { BadRequestError, NotFoundError, ConflictError } = require("../errors");
 const { StatusCodes } = require("http-status-codes");
 const { createResponse } = require("../utils/createResponse");
@@ -9,6 +14,12 @@ const getOrdersMe = async (req, res) => {
 
   const orders = await ShopOrder.findAll({
     where: { userId },
+
+    include: [
+      {
+        association: "address",
+      },
+    ],
     order: [["createdAt", "desc"]],
   });
   const response = createResponse({
@@ -22,22 +33,31 @@ const getOrdersMe = async (req, res) => {
 const getOrderDetail = async (req, res) => {
   const { id: orderId } = req.params;
 
-  const order = await ShopOrder.findByPk(orderId, {
-    include: {
-      association: "ordersLine",
-      include: {
-        association: "productItem",
+  const order = await ShopOrder.findOne({
+    where: { id: orderId },
+    include: [
+      {
+        association: "address",
+      },
+      {
+        association: "ordersLine",
         include: [
           {
-            association: "color",
-          },
-          {
-            association: "product",
+            association: "productItem",
+            include: [
+              {
+                association: "color",
+              },
+              {
+                association: "product",
+              },
+            ],
           },
         ],
       },
-    },
+    ],
   });
+
   if (!order) throw new NotFoundError("Đơn đặt hàng không tìm thấy!");
   const response = createResponse({
     message: "Lấy đơn hàng chi tiet",
@@ -58,17 +78,20 @@ const addOrderMe = async (req, res) => {
     (acc, cur) => acc + cur.price * cur.qty,
     0
   );
-
   const addressExists = await Address.findOne({
     where: address,
   });
-
+  await Address.update({ using: false }, { where: { userId } });
   if (!addressExists) {
+    address.using = true;
     const newAddress = await Address.create(address);
     address.id = newAddress.id;
   } else {
+    addressExists.using = true;
+    await addressExists.save();
     address.id = addressExists.id;
   }
+
   try {
     let order;
     await sequelize.transaction(async (t) => {
@@ -86,7 +109,7 @@ const addOrderMe = async (req, res) => {
         },
         { transaction: t }
       );
-      // await ShoppingCart.destroy({ where: { userId } }, { transaction: t });
+      await ShoppingCart.destroy({ where: { userId } });
     });
     const dataSendMail = {
       info: {

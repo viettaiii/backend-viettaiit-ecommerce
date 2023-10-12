@@ -31,7 +31,8 @@ const addAddressMe = async (req, res) => {
   // if (isAddress) throw new BadRequestError("address user is already in use");
 
   req.body.userId = userId;
-
+  await Address.update({ using: false }, { where: { userId } });
+  req.body.using = true;
   await Address.create(req.body);
   const response = createResponse({
     message: "add new address success",
