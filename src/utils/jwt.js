@@ -11,23 +11,20 @@ const createJWT = (payload, expiresIn) => {
 };
 
 const attachCookiesToResponse = (res, infoUser, refreshToken) => {
-  const token = createJWT(
-    infoUser,
-    (expiresIn = process.env.JWT_ACCESS_TOKEN_LIFETIME)
-  );
+  const token = createJWT(infoUser, process.env.JWT_ACCESS_TOKEN_LIFETIME);
   const refreshTokenJWT = createJWT(
     { infoUser, refreshToken },
-    (expiresIn = process.env.JWT_REFRESH_TOKEN_LIFETIME)
+    process.env.JWT_REFRESH_TOKEN_LIFETIME
   );
   // const oneMinute = console.log(Math.floor(Date.now() / 1000) + 60);
   res.cookie("access_token", token, {
     httpOnly: true,
-    exp: Math.floor(Date.now() / 1000) + 60 * 60 * 4,
+    expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
     secure: process.env.NODE_ENV === "production",
   });
   res.cookie("refresh_token", refreshTokenJWT, {
     httpOnly: true,
-    exp: Math.floor(Date.now() / 1000) + 60 * 60 * 30,
+    expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
     secure: process.env.NODE_ENV === "production",
   });
 };

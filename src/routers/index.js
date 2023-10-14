@@ -9,6 +9,7 @@ const routerAddresses = require("./address.router");
 const routerReviews = require("./userReview.router");
 const routerShoppingCart = require("./shoppingCart.router");
 const routerOrders = require("./shopOrder.router");
+const routerPayment = require("./payment.router");
 
 const createRouters = (app) => {
   app.use("/api/v1/auth", routerAuth);
@@ -22,6 +23,7 @@ const createRouters = (app) => {
   app.use("/api/v1/addresses", routerAddresses);
   app.use("/api/v1/reviews", routerReviews);
   app.use("/api/v1/shopping-cart", routerShoppingCart);
+  app.use("/api/v1/payment", routerPayment);
 };
 
 module.exports = createRouters;

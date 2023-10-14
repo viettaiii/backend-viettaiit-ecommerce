@@ -6,7 +6,7 @@ const authenticateUser = (req, res, next) => {
   const token = req.cookies.access_token;
   if (!token) throw new UnauthorizedError("unauthorized");
   try {
-    const decoded = verifyValue(token); 
+    const decoded = verifyValue(token);
     req.userInfo = decoded.data;
     next();
   } catch (error) {
