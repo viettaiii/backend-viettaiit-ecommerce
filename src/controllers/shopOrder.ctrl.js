@@ -91,7 +91,11 @@ const addOrderMe = async (req, res) => {
     await addressExists.save();
     address.id = addressExists.id;
   }
-  if (!status) status = "pending";
+  paymentType = "Thanh toán khi giao hàng (COD)";
+  if (!status) {
+    status = "pending";
+    paymentType = "Thanh toán chuyển khoản";
+  }
   try {
     let order;
     await sequelize.transaction(async (t) => {
@@ -112,11 +116,13 @@ const addOrderMe = async (req, res) => {
       );
       await ShoppingCart.destroy({ where: { userId } });
     });
+
     const dataSendMail = {
       info: {
         orderId: order.id,
         orderTotal: order.orderTotal,
         orderDate: order.orderDate,
+        paymentType,
         ...address,
         email: email,
       },
