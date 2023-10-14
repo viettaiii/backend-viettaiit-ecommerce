@@ -38,7 +38,7 @@ router.get("/login/success", (req, res) => {
     role: req.user.role,
   };
   const response = createResponse({
-    message: "success",
+    message: "Đăng nhập thành công!",
     status: StatusCodes.OK,
     data: userShow,
   });
@@ -47,7 +47,7 @@ router.get("/login/success", (req, res) => {
 
 router.get("/login/failure", (req, res) => {
   const response = createResponse({
-    message: "failure",
+    message: "Đăng nhập thất bại!",
     status: StatusCodes.UNAUTHORIZED,
   });
   res.status(response.status).json(response);
@@ -86,7 +86,10 @@ router.get(
 );
 
 // github
-router.get("/github", passport.authenticate("github", { scope: ["user:email"] }));
+router.get(
+  "/github",
+  passport.authenticate("github", { scope: ["user:email"] })
+);
 
 router.get(
   "/github/callback",
