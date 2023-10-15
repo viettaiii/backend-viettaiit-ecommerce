@@ -18,10 +18,16 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       // Shopping cart item
-      this.hasMany(models.ShoppingCartItem, { foreignKey: "productItemId" });
+      this.hasMany(models.ShoppingCartItem, {
+        foreignKey: "productItemId",
+        as: "cartItems",
+      });
 
       // Order line
-      this.hasMany(models.OrderLine, { foreignKey: "productItemId" , as: "ordersLine", });
+      this.hasMany(models.OrderLine, {
+        foreignKey: "productItemId",
+        as: "ordersLine",
+      });
     }
   }
   ProductItem.init(

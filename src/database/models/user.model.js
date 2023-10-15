@@ -19,7 +19,11 @@ module.exports = (sequelize, DataTypes) => {
 
       // Address
       this.hasMany(models.Address, { foreignKey: "userId", as: "addresses" });
-
+      // Shopping Cart
+      this.hasOne(models.ShoppingCart, {
+        foreignKey: "userId",
+        as: "cart",
+      });
       // orders
       this.hasMany(models.ShopOrder, {
         foreignKey: "userId",

@@ -18,12 +18,14 @@ const attachCookiesToResponse = (res, infoUser, refreshToken) => {
   );
   // const oneMinute = console.log(Math.floor(Date.now() / 1000) + 60);
   res.cookie("access_token", token, {
-    httpOnly: true,
+    httpOnly: false,
+    sameSite: "none",
     expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
     secure: process.env.NODE_ENV === "production",
   });
   res.cookie("refresh_token", refreshTokenJWT, {
-    httpOnly: true,
+    httpOnly: false,
+    sameSite: "none",
     expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
     secure: process.env.NODE_ENV === "production",
   });

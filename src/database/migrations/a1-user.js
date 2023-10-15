@@ -1,7 +1,7 @@
 "use strict";
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up(queryInterface ,Sequelize) {
+  async up(queryInterface, Sequelize) {
     await queryInterface.createTable("Users", {
       id: {
         allowNull: false,
@@ -21,9 +21,6 @@ module.exports = {
       password: {
         type: Sequelize.STRING,
         allowNull: false,
-        validate: {
-          is: /^[0-9a-f]{64}$/i,
-        },
       },
       role: {
         type: Sequelize.ENUM,
