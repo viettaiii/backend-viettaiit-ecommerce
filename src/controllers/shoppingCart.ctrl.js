@@ -12,6 +12,7 @@ const addOrUpdateCartItemMe = async (req, res) => {
       userId: userId,
     },
   });
+
   const [shoppingCartItem, created] = await ShoppingCartItem.findOrCreate({
     where: { cartId: shoppingCart.id, productItemId },
     defaults: {
@@ -20,7 +21,6 @@ const addOrUpdateCartItemMe = async (req, res) => {
       qty,
     },
   });
-
   if (!created) {
     shoppingCartItem.qty = shoppingCartItem.qty + qty;
     await shoppingCartItem.save();
