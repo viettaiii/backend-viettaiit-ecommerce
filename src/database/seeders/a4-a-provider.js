@@ -4,7 +4,7 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.bulkInsert("Providers", [
       {
-        id: "0e13fc37-6db2-4f44-933d-28cc9c2814d4",
+        id: "8f24916a-cf31-4b04-a2e3-95d4d8abaa12",
         providerName: "Apple",
       },
       // { id: "a7c8a31d-b01f-4c36-bd47-d971c9525bab", providerName: "Samsung" },

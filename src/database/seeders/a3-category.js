@@ -4,32 +4,32 @@ module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.bulkInsert("Categories", [
       {
-        id: "1636e9b8-03e1-4bec-8d19-b2aea0cf13f4",
+        id: "f47ac10b-58cc-4372-a567-0e02b2c3d479",
         categoryName: "IPhone",
         image: "iphone.webp",
       },
       {
-        id: "445362d2-3525-49aa-89f8-d4cb32735283",
+        id: "5102c8b2-1dd5-481a-96e7-d61250f2ea05",
         categoryName: "IPad",
         image: "ipad.webp",
       },
       {
-        id: "4f8ae939-22f2-43b1-bbd4-76331a99e3ec",
+        id: "4dfe0b0c-eece-477e-aa19-2c15b51d1faa",
         categoryName: "Mac",
         image: "mac.webp",
       },
       {
-        id: "5ae8a602-da1d-4707-bd88-5ef111413814",
+        id: "052c5089-4a6c-4d0a-b439-ef4e957df1b8",
         categoryName: "Watch",
         image: "watch.webp",
       },
       {
-        id: "72c52f69-817e-4d42-920b-856fd9e2e04b",
+        id: "b39ea7b2-cc38-4dd4-89f4-6c738903b3e0",
         categoryName: "Âm thanh",
         image: "airport.webp",
       },
       {
-        id: "e0ffd183-6a3a-4f7a-94c7-6f896512f114",
+        id: "3f9d74d0-14c9-44d7-80b7-cd2d41104970",
         categoryName: "Phụ kiện",
         image: "phukien.webp",
       },
