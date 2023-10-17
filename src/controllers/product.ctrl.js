@@ -30,7 +30,7 @@ const getProducts = async (req, res) => {
   const queryObjectProvider = {};
   if (name)
     queryObjectProduct.name = {
-      [Op.like]: `%${name}%`,
+      [Op.iLike]: `%${name}%`,
     };
   if (discount === "true") {
     queryObjectProduct.discount = {
@@ -73,7 +73,7 @@ const getProducts = async (req, res) => {
       [Op.like]: `${providerId}`,
     };
   }
- 
+
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 8;
   const offset = (page - 1) * limit;
@@ -348,28 +348,16 @@ const getProductsPhuKien = async (req, res) => {
 // get product hot sales
 const getProductsCategory = async (req, res) => {
   const { categoryName } = req.params;
+
   const products = await Product.findAll({
-    where: { name: { [Op.like]: `%${categoryName}%` } },
+    where: { name: { [Op.substring]: `${categoryName}` } },
     offset: 0,
     limit: 8,
   });
-  let category;
-  if (categoryName.toUpperCase().startsWith("IPHONE")) {
-    category = "productsIphone";
-  }
-  if (categoryName.toUpperCase().startsWith("MACBOOK")) {
-    category = "productsMacbook";
-  }
-  if (categoryName.toUpperCase().startsWith("IPAD")) {
-    category = "productsIpad";
-  }
-  if (categoryName.toUpperCase().startsWith("APPLE WATCH")) {
-    category = "productsAppleWatch";
-  }
+
   const response = createResponse({
     message: `Lấy danh mục sản phẩm ${categoryName}`,
     status: StatusCodes.OK,
-    category,
     data: products,
   });
   res.status(response.status).json(response);
