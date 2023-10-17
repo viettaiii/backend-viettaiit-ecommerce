@@ -69,7 +69,7 @@ const getOrderDetail = async (req, res) => {
 const addOrderMe = async (req, res) => {
   const { userId, email } = req.userInfo;
 
-  const { ordersLine, address, productItems, status } = req.body;
+  const { ordersLine, address, productItems } = req.body;
 
   if (!ordersLine)
     throw new BadRequestError("Vui lòng cung cấp tất cả các giá trị!");
@@ -91,7 +91,8 @@ const addOrderMe = async (req, res) => {
     await addressExists.save();
     address.id = addressExists.id;
   }
-  paymentType = "Thanh toán khi giao hàng (COD)";
+  let paymentType = "Thanh toán khi giao hàng (COD)";
+  let status = req.body.status || null;
   if (!status) {
     status = "pending";
     paymentType = "Thanh toán chuyển khoản";

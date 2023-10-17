@@ -73,6 +73,7 @@ const getProducts = async (req, res) => {
       [Op.like]: `${providerId}`,
     };
   }
+ 
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 8;
   const offset = (page - 1) * limit;
@@ -83,16 +84,16 @@ const getProducts = async (req, res) => {
     else order.push([sort, "asc"]);
   }
   const { count, rows } = await Product.findAndCountAll({
-    attributes: {
-      include: [
-        [
-          sequelize.literal(`(
-            SELECT SUM(qtyInStock) FROM ProductItems WHERE ProductItems.productId = Product.id
-          )`),
-          "inventoryCount",
-        ],
-      ],
-    },
+    // attributes: {
+    //   include: [
+    //     [
+    //       sequelize.literal(`(
+    //         SELECT SUM(qtyInStock) FROM ProductItem WHERE ProductItem.productId = Product.id
+    //       )`),
+    //       "inventoryCount",
+    //     ],
+    //   ],
+    // },
     where: queryObjectProduct,
     include: [
       {
