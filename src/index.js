@@ -16,11 +16,7 @@ const configViewEngine = require("./database/config/viewEngine");
 const createRouters = require("./routers");
 app.use(
   cors({
-    origin: [
-      process.env.FRONTEND_CLIENT_URL,
-      process.env.FRONTEND_ADMIN_URL,
-      process.env.FRONTEND_TEST_URL,
-    ],
+    origin: [process.env.FRONTEND_CLIENT_URL, process.env.FRONTEND_ADMIN_URL],
     credentials: true,
   })
 );
