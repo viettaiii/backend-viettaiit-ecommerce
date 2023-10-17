@@ -44,6 +44,7 @@ const sendMailOrderedSuccessfully = async ({ info, productItems }) => {
   const data = {
     info,
     productItems,
+    URL_FRONTEND: process.env.FRONTEND_CLIENT_URL
   };
   const html = compiledTemplate(data);
   return await sendMail({
