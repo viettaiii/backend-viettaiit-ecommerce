@@ -1,7 +1,9 @@
+const { uploadSingleHelper ,uploadMultipleHelper} = require("../helpers/uploadHelper");
+
 const router = require("express").Router();
-const upload = require("../controllers/upload.ctrl")
-const { uploadSingle, uploadMultiple } = require("../helpers/uploadHelper");
-router.post("/single", uploadSingle, upload.uploadSingle);
-router.post("/multiple", uploadMultiple, upload.uploadMultiple);
+const { uploadSingle ,uploadMultiple} = require("../controllers/upload.ctrl");
+// const { uploadSingle, uploadMultiple } = require("../helpers/uploadHelper");
+router.post("/single", uploadSingleHelper, uploadSingle);
+router.post("/multiple", uploadMultipleHelper,uploadMultiple);
 
 module.exports = router;
