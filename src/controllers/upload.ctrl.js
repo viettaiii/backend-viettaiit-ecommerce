@@ -5,7 +5,7 @@ const uploadSingle = async (req, res) => {
   const response = createResponse({
     message: "uploaded successfully file",
     status: StatusCodes.OK,
-    data: req.file.filename,
+    data: req.file,
   });
   res.status(response.status).json(response);
 };

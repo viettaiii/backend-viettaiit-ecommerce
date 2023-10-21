@@ -1,70 +1,41 @@
-// const multer = require("multer");
-
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, "public/uploads");
-//   },
-//   filename: function (req, file, cb) {
-//     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-//     cb(null, "viet-tai-" + uniqueSuffix + file.originalname);
-//   },
-// });
-// const upload = multer({ storage: storage });
-// const uploadSingle = upload.single("file");
-// const uploadMultiple = upload.array("multiple");
-// module.exports = {
-//   uploadSingle,
-//   uploadMultiple,
-// };
-
-const multer = require("multer");
 const sharp = require("sharp");
-const path = require("path");
-const BadRequestError = require("../errors/badRequestError");
+const cloudinary = require("cloudinary").v2;
+const { Readable } = require("stream");
+const upload = require("../database/config/cloudinary.config");
 
-const storage = multer.memoryStorage(); // Store the file in memory before processing
-
-const fileFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith("image/")) {
-    cb(null, true);
-  } else {
-    cb(
-      new BadRequestError("Invalid file type. Only images are allowed."),
-      false
-    );
-  }
+const bufferToStream = (buffer) => {
+  const readable = new Readable({
+    read() {
+      this.push(buffer);
+      this.push(null);
+    },
+  });
+  return readable;
 };
-
-const upload = multer({
-  storage: storage,
-  fileFilter: fileFilter,
-});
 
 const uploadSingleHelper = (req, res, next) => {
   const singleUpload = upload.single("file");
-
   singleUpload(req, res, async (err) => {
     if (err) {
       return res.status(400).json({ error: err.message });
     }
-
     if (!req.file) {
       return res.status(400).json({ error: "Please upload an image." });
     }
-
     try {
-      const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-      const filename =
-        "viet-tai-" + uniqueSuffix + path.extname(req.file.originalname);
-
-      // Resize and process the uploaded image
-      await sharp(req.file.buffer)
-        .resize({ width: 150, height: 97 })
+      const data = await sharp(req.file.buffer)
+        // .resize({ width: 150, height: 97 })
         .toFormat("jpeg", { mozjpeg: true })
-        .toFile("public/uploads/" + filename);
-
-      req.imagePath = "public/uploads/" + filename;
-      next();
+        .toBuffer();
+      const stream = cloudinary.uploader.upload_stream(
+        { folder: "viettaiit-ecommerce" },
+        (error, result) => {
+          if (error) return console.error(error);
+          req.file.path = result.secure_url;
+          next();
+        }
+      );
+      bufferToStream(data).pipe(stream);
     } catch (error) {
       return res.status(500).json({ error: "Image processing error." });
     }
@@ -82,26 +53,32 @@ const uploadMultipleHelper = (req, res, next) => {
         .status(400)
         .json({ error: "Please upload one or more images." });
     }
-
-    try {
-      for (const file of req.files) {
-        const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-        const filename =
-          "viet-tai-" +
-          uniqueSuffix +
-          "-" +
-          file.originalname.split(" ").join("-");
-        file.filename = filename;
-        file.path = "public/uploads/" + filename;
-        await sharp(file.buffer)
+    let urls = [];
+    for (const file of req.files) {
+      try {
+        const data = await sharp(file.buffer)
           // .resize({ width: 150, height: 97 })
-          .toFormat("jpeg", { mozjpeg: true })
-          .toFile("public/uploads/" + filename);
-      }
+          .toFormat("png", { mozjpeg: true })
+          .toBuffer();
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: "viettaiit-ecommerce" },
+          (error, result) => {
+            if (error) return console.error(error);
+            urls.push(result.secure_url);
+            if (urls.length === req.files.length) {
+              // Nếu đã tải lên và xử lý tất cả các tệp
+              urls.forEach((url, idx) => {
+                req.files[idx].path = url; // Gán mảng uploadedFiles vào req.files
+              });
 
-      next();
-    } catch (error) {
-      return res.status(500).json({ error: "Image processing error." });
+              next(); // Tiếp tục với middleware tiếp theo
+            }
+          }
+        );
+        bufferToStream(data).pipe(stream);
+      } catch (error) {
+        return res.status(500).json({ error: "Image processing error." });
+      }
     }
   });
 };
