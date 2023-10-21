@@ -13,35 +13,38 @@ const bufferToStream = (buffer) => {
   return readable;
 };
 
-const uploadSingleHelper = (req, res, next) => {
-  const singleUpload = upload.single("file");
-  singleUpload(req, res, async (err) => {
-    if (err) {
-      return res.status(400).json({ error: err.message });
-    }
-    if (!req.file) {
-      return res.status(400).json({ error: "Please upload an image." });
-    }
-    try {
-      const data = await sharp(req.file.buffer)
-        // .resize({ width: 150, height: 97 })
-        .toFormat("jpeg", { mozjpeg: true })
-        .toBuffer();
-      const stream = cloudinary.uploader.upload_stream(
-        { folder: "viettaiit-ecommerce" },
-        (error, result) => {
-          if (error) return console.error(error);
-          req.file.path = result.secure_url;
-          next();
-        }
-      );
-      bufferToStream(data).pipe(stream);
-    } catch (error) {
-      return res.status(500).json({ error: "Image processing error." });
-    }
-  });
+const uploadSingleHelper = (type) => {
+  return (req, res, next) => {
+    const singleUpload = upload.single("file");
+    singleUpload(req, res, async (err) => {
+      if (err) {
+        return res.status(400).json({ error: err.message });
+      }
+      if (!req.file) {
+        return res.status(400).json({ error: "Please upload an image." });
+      }
+      try {
+        const data = await sharp(req.file.buffer)
+          // .resize({ width: 150, height: 97 })
+          .toFormat("jpeg", { mozjpeg: true })
+          .toBuffer();
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: "viettaiit-ecommerce/" + type },
+          (error, result) => {
+            if (error) return console.error(error);
+            req.file.path = result.secure_url;
+            next();
+          }
+        );
+        bufferToStream(data).pipe(stream);
+      } catch (error) {
+        return res.status(500).json({ error: "Image processing error." });
+      }
+    });
+  };
 };
-const uploadMultipleHelper = (req, res, next) => {
+
+const uploadMultipleHelper = (type) => (req, res, next) => {
   const multipleUpload = upload.array("multiple");
   multipleUpload(req, res, async (err) => {
     if (err) {
@@ -61,7 +64,7 @@ const uploadMultipleHelper = (req, res, next) => {
           .toFormat("png", { mozjpeg: true })
           .toBuffer();
         const stream = cloudinary.uploader.upload_stream(
-          { folder: "viettaiit-ecommerce" },
+          { folder: "viettaiit-ecommerce/" + type },
           (error, result) => {
             if (error) return console.error(error);
             urls.push(result.secure_url);
