@@ -72,10 +72,11 @@
 # TASK
   - viết shop order
  Ngay 6/9/2023
-   - Tìm cách : upload file chỉ định lưu ảnh theo vị trí
+   - Tìm cách : upload file chỉ định lưu ảnh theo vị trí => OK (upload to cloundinary)
 
 
 
 # PERFORMANCE
   1. IMAGE
-    -
+       - cahing images
+       - uploadinary
