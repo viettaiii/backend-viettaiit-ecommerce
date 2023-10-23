@@ -2,7 +2,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("CachingProductDetails", {
+    await queryInterface.createTable("Caches", {
       id: {
         allowNull: false,
         primaryKey: true,
@@ -10,18 +10,9 @@ module.exports = {
         defaultValue: Sequelize.UUID,
       },
       data: {
-        type: Sequelize.STRING,
-        allowNull: false,
+        type: Sequelize.JSON,
       },
-      productId: {
-        type: Sequelize.UUID,
-        references: {
-          model: "products",
-          key: "id",
-        },allowNull: false,
-        onDelete:  'cascade',
-        onUpdate: 'cascade',
-      },
+      key: { type: Sequelize.STRING, allowNull: false, unique: true },
       createdAt: {
         type: Sequelize.DATE,
       },
@@ -31,6 +22,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("CachingProductDetails");
+    await queryInterface.dropTable("Caches");
   },
 };

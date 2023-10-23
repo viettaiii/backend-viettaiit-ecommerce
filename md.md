@@ -20,7 +20,6 @@
          + delete many product  [DELETE]  /products/delete-many   => OK
          + edit product  [PATCH]  /products/delete-many  => OK
          + add new product  [POST] /products    => OK
-         
          + get product theo category(iphone ,ipad, macbook, applewatch) => OK
    - category
        - router
@@ -74,9 +73,8 @@
  Ngay 6/9/2023
    - Tìm cách : upload file chỉ định lưu ảnh theo vị trí => OK (upload to cloundinary)
 
-
-
 # PERFORMANCE
   1. IMAGE
-       - cahing images
-       - uploadinary
+       - cahing images => OK
+       - uploadinary => OK
+  2. Caching get product detail

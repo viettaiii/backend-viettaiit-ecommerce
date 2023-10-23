@@ -4,6 +4,7 @@ const {
   Category,
   Product,
   ProductItem,
+  Cache,
   sequelize,
 } = require("../database/models");
 const { Op } = require("sequelize");
@@ -23,24 +24,41 @@ const getProductsStatic = async (req, res) => {
 };
 
 const getProducts = async (req, res) => {
-  const { name, categoryId, discount, providerId, numericFilters, sort } =
-    req.query;
+  const {
+    name,
+    categoryId,
+    discount = "false",
+    providerId,
+    numericFilters,
+    sort,
+  } = req.query;
   const queryObjectProduct = {};
   const queryObjectCategory = {};
   const queryObjectProvider = {};
-  if (name)
-    queryObjectProduct.name = {
-      [Op.iLike]: `%${name}%`,
-    };
+  let arrCache = [];
+  if (name) {
+    if (process.env.DB_DIALECT == "mysql") {
+      queryObjectProduct.name = {
+        [Op.like]: `%${name}%`,
+      };
+    } else {
+      queryObjectProduct.name = {
+        [Op.iLike]: `%${name}%`,
+      };
+    }
+  }
+
+  arrCache.push({ key: "name", value: name });
   if (discount === "true") {
     queryObjectProduct.discount = {
       [Op.ne]: 0,
     };
   }
-
+  arrCache.push({ key: "discount", value: discount });
   if (numericFilters) {
     const regex = /\b(>|>=|=|<|<=)\b/g;
     const listFilters = numericFilters.replace(regex, (match) => `-${match}-`);
+    arrCache.push({ key: "listFilters", value: listFilters });
     listFilters.split(",").forEach((item) => {
       const [field, operation, value] = item.split("-");
       switch (operation) {
@@ -68,60 +86,94 @@ const getProducts = async (req, res) => {
     queryObjectCategory.id = {
       [Op.like]: `${categoryId}`,
     };
+  arrCache.push({ key: "categoryId", value: categoryId });
   if (providerId) {
     queryObjectProvider.id = {
       [Op.like]: `${providerId}`,
     };
   }
-
+  arrCache.push({ key: "providerId", value: providerId });
   const page = parseInt(req.query.page) || 1;
+  arrCache.push({ key: "page", value: page });
   const limit = parseInt(req.query.limit) || 8;
+  arrCache.push({ key: "limit", value: limit });
   const offset = (page - 1) * limit;
+  arrCache.push({ key: "offset", value: offset });
   let order = [["createdAt", "desc"]];
   if (sort) {
     order = [];
     if (sort.startsWith("-")) order.push([sort.slice(1), "desc"]);
     else order.push([sort, "asc"]);
   }
-  const { count, rows } = await Product.findAndCountAll({
-    // attributes: {
-    //   include: [
-    //     [
-    //       sequelize.literal(`(
-    //         SELECT SUM(qtyInStock) FROM ProductItem WHERE ProductItem.productId = Product.id
-    //       )`),
-    //       "inventoryCount",
-    //     ],
-    //   ],
-    // },
-    where: queryObjectProduct,
-    include: [
-      {
-        association: "provider",
-        attributes: { exclude: ["createdAt", "updatedAt"] },
-        where: queryObjectProvider,
-      },
-      {
-        association: "category",
-        attributes: { exclude: ["createdAt", "updatedAt"] },
-
-        where: queryObjectCategory,
-      },
-    ],
-    order,
-    limit,
-    offset,
-  });
-
+  arrCache.push({ key: "sort", value: sort + "" });
+  let keyCache = "";
+  let len = arrCache.length;
+  if (len > 0) {
+    keyCache = arrCache
+      .map((item, i) => {
+        let val = item.key + ":" + item.value;
+        if (i !== len - 1) val += ",";
+        return val;
+      })
+      .join("");
+  }
+  const existingKeyCache = await Cache.findOne({ where: { key: keyCache } });
+  let totalPages;
+  let perPage;
+  let total;
+  let data;
   const response = createResponse({
     message: "Thành công",
     status: StatusCodes.OK,
-    page,
-    perPage: limit,
-    total: count,
-    totalPages: Math.ceil(count / limit),
-    data: rows,
   });
+  if (existingKeyCache) {
+    let dataCacheExist = JSON.parse(existingKeyCache.data);
+    response.totalPages = dataCacheExist.totalPages;
+    response.perPage = dataCacheExist.perPage;
+    response.page = dataCacheExist.page;
+    response.total = dataCacheExist.total;
+    response.data = dataCacheExist.data;
+  } else {
+    const { count, rows } = await Product.findAndCountAll({
+      // attributes: {
+      //   include: [
+      //     [
+      //       sequelize.literal(`(
+      //         SELECT SUM(qtyInStock) FROM ProductItem WHERE ProductItem.productId = Product.id
+      //       )`),
+      //       "inventoryCount",
+      //     ],
+      //   ],
+      // },
+      where: queryObjectProduct,
+      include: [
+        {
+          association: "provider",
+          attributes: { exclude: ["createdAt", "updatedAt"] },
+          where: queryObjectProvider,
+        },
+        {
+          association: "category",
+          attributes: { exclude: ["createdAt", "updatedAt"] },
+
+          where: queryObjectCategory,
+        },
+      ],
+      order,
+      limit,
+      offset,
+    });
+    totalPages = Math.ceil(count / limit);
+    data = rows;
+    total = count;
+    let dataCache = JSON.stringify({ page, perPage, total, totalPages, data });
+    await Cache.create({ key: keyCache, data: dataCache });
+    response.totalPages = totalPages;
+    response.perPage = perPage;
+    response.page = page;
+    response.total = total;
+    response.data = data;
+  }
   res.status(response.status).json(response);
 };
 
@@ -170,36 +222,43 @@ const getProduct = async (req, res) => {
   const {
     params: { slug },
   } = req;
-  const product = await Product.findOne({
-    where: { slug },
-    attributes: { exclude: ["createdAt", "updatedAt"] },
-    include: [
-      {
-        association: "productItems",
-        attributes: { exclude: ["createdAt", "updatedAt"] },
-        include: {
-          association: "color",
-          attributes: { exclude: ["createdAt", "updatedAt"] },
-        },
-      },
-      {
-        association: "category",
-        attributes: { exclude: ["createdAt", "updatedAt"] },
-      },
-      {
-        association: "provider",
-        attributes: { exclude: ["createdAt", "updatedAt"] },
-      },
-    ],
-  });
-  if (!product) throw new NotFoundError("Sản phẩm không có!");
-
+  let keyCache = `product-detail-name:${slug}`;
+  const existKey = await Cache.findOne({ where: { key: keyCache } });
   const response = createResponse({
     message: "Nhận thông tin chi tiết sản phẩm thành công",
-    status: StatusCodes.CREATED,
-    data: product,
+    status: StatusCodes.OK,
   });
-  res.status(StatusCodes.OK).json(response);
+  if (existKey) {
+    response.data = JSON.parse(existKey.data);
+  } else {
+    const product = await Product.findOne({
+      where: { slug },
+      attributes: { exclude: ["createdAt", "updatedAt"] },
+      include: [
+        {
+          association: "productItems",
+          attributes: { exclude: ["createdAt", "updatedAt"] },
+          include: {
+            association: "color",
+            attributes: { exclude: ["createdAt", "updatedAt"] },
+          },
+        },
+        {
+          association: "category",
+          attributes: { exclude: ["createdAt", "updatedAt"] },
+        },
+        {
+          association: "provider",
+          attributes: { exclude: ["createdAt", "updatedAt"] },
+        },
+      ],
+    });
+    if (!product) throw new NotFoundError("Sản phẩm không có!");
+    let dataCache = JSON.stringify(product);
+    response.data = product;
+    await Cache.create({ key: keyCache, data: dataCache });
+  }
+  res.status(response.status).json(response);
 };
 
 const updateProduct = async (req, res) => {
