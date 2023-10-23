@@ -8,8 +8,8 @@ module.exports = {
         id: {
           allowNull: false,
           primaryKey: true,
-          type: Sequelize.UUID,
-          defaultValue: Sequelize.UUID,
+          type: Sequelize.STRING,
+          defaultValue: Sequelize.STRING,
         },
         orderDate: {
           type: Sequelize.DATE,
@@ -26,9 +26,9 @@ module.exports = {
         },
         userId: {
           allowNull: false,
-          type: Sequelize.UUID,
+          type: Sequelize.STRING,
           references: {
-            model: "users",
+            model: "Users",
             key: "id",
           },
           allowNull: false,
@@ -37,9 +37,9 @@ module.exports = {
         },
         addressId: {
           allowNull: false,
-          type: Sequelize.UUID,
+          type: Sequelize.STRING,
           references: {
-            model: "addresses",
+            model: "Addresses",
             key: "id",
           },
           allowNull: false,

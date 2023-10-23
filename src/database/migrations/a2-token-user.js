@@ -6,8 +6,8 @@ module.exports = {
       id: {
         allowNull: false,
         primaryKey: true,
-        type: Sequelize.UUID,
-        defaultValue: Sequelize.UUID,
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.STRING,
       },
       ip: {
         type: Sequelize.STRING,
@@ -26,7 +26,7 @@ module.exports = {
         defaultValue: true,
       },
       userId: {
-        type: Sequelize.UUID,
+        type: Sequelize.STRING,
         references: {
           model: "Users",
           key: "id",

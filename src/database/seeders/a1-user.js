@@ -10,7 +10,7 @@ module.exports = {
         password:
           "$2a$10$H3StP.pXYjnvLWRpm532oOPtOCHaTjj/0KT1NvKp6KpMJ9DZQuT92",
         role: "admin",
-        isVerified: 1,
+        isVerified: true,
         verifiedDate: "2023-08-05 13:43:09",
       },
       {
@@ -20,7 +20,7 @@ module.exports = {
         password:
           "$2a$10$H3StP.pXYjnvLWRpm532oOPtOCHaTjj/0KT1NvKp6KpMJ9DZQuT92",
         role: "client",
-        isVerified: 1,
+        isVerified: true,
         verifiedDate: "2023-08-05 13:43:09",
       },
       {
@@ -30,7 +30,7 @@ module.exports = {
         password:
           "$2a$10$H3StP.pXYjnvLWRpm532oOPtOCHaTjj/0KT1NvKp6KpMJ9DZQuT92",
         role: "client",
-        isVerified: 1,
+        isVerified: true,
         verifiedDate: "2023-08-05 13:43:09",
       },
       {
@@ -40,7 +40,7 @@ module.exports = {
         password:
           "$2a$10$H3StP.pXYjnvLWRpm532oOPtOCHaTjj/0KT1NvKp6KpMJ9DZQuT92",
         role: "client",
-        isVerified: 1,
+        isVerified: true,
         verifiedDate: "2023-08-05 13:43:09",
       },
       {
@@ -50,7 +50,7 @@ module.exports = {
         password:
           "$2a$10$H3StP.pXYjnvLWRpm532oOPtOCHaTjj/0KT1NvKp6KpMJ9DZQuT92",
         role: "client",
-        isVerified: 1,
+        isVerified: true,
         verifiedDate: "2023-08-05 13:43:09",
       },
     ]);

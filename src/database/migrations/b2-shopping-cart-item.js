@@ -8,18 +8,18 @@ module.exports = {
         id: {
           allowNull: false,
           primaryKey: true,
-          type: Sequelize.UUID,
-          defaultValue: Sequelize.UUID,
+          type: Sequelize.STRING,
+          defaultValue: Sequelize.STRING,
         },
         qty: {
           type: Sequelize.INTEGER,
           allowNull: false,
         },
         cartId: {
-          type: Sequelize.UUID,
+          type: Sequelize.STRING,
           allowNull: false,
           references: {
-            model: "shoppingCarts",
+            model: "ShoppingCarts",
             key: "id",
           },
           allowNull: false,
@@ -28,10 +28,10 @@ module.exports = {
           onUpdate: "cascade",
         },
         productItemId: {
-          type: Sequelize.UUID,
+          type: Sequelize.STRING,
           allowNull: false,
           references: {
-            model: "productItems",
+            model: "ProductItems",
             key: "id",
           },
           allowNull: false,

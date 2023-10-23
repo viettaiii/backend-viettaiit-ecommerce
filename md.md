@@ -77,4 +77,7 @@
   1. IMAGE
        - cahing images => OK
        - uploadinary => OK
-  2. Caching get product detail
+  2. Caching product => OK
+
+## PROBLEMS
+  - auth on internet not working

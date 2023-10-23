@@ -8,8 +8,8 @@ module.exports = {
         id: {
           allowNull: false,
           primaryKey: true,
-          type: Sequelize.UUID,
-          defaultValue: Sequelize.UUID,
+          type: Sequelize.STRING,
+          defaultValue: Sequelize.STRING,
         },
         ratingValue: {
           type: Sequelize.INTEGER,
@@ -21,9 +21,9 @@ module.exports = {
           allowNull: false,
         },
         userId: {
-          type: Sequelize.UUID,
+          type: Sequelize.STRING,
           references: {
-            model: "users",
+            model: "Users",
             key: "id",
           },
           allowNull: false,
@@ -32,9 +32,9 @@ module.exports = {
           onUpdate: "cascade",
         },
         productId: {
-          type: Sequelize.UUID,
+          type: Sequelize.STRING,
           references: {
-            model: "products",
+            model: "Products",
             key: "id",
           },
           allowNull: false,

@@ -6,8 +6,8 @@ module.exports = {
       id: {
         allowNull: false,
         primaryKey: true,
-        type: Sequelize.UUID,
-        defaultValue: Sequelize.UUID,
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.STRING,
       },
       categoryName: {
         type: Sequelize.ENUM,
