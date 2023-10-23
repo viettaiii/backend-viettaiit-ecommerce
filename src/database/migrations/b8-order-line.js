@@ -8,8 +8,8 @@ module.exports = {
         id: {
           primaryKey: true,
           allowNull: false,
-          type: Sequelize.STRING,
-          defaultValue: Sequelize.STRING,
+          type: Sequelize.UUID,
+          defaultValue: Sequelize.UUIDV4,
         },
         qty: {
           type: Sequelize.INTEGER,
@@ -21,7 +21,8 @@ module.exports = {
         },
         productItemId: {
           allowNull: false,
-          type: Sequelize.STRING,
+          type: Sequelize.UUID,
+
           references: {
             model: "ProductItems",
             key: "id",
@@ -33,7 +34,8 @@ module.exports = {
         },
         shopOrderId: {
           allowNull: false,
-          type: Sequelize.STRING,
+          type: Sequelize.UUID,
+  
           references: {
             model: "ShopOrders",
             key: "id",

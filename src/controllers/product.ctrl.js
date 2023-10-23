@@ -37,17 +37,10 @@ const getProducts = async (req, res) => {
   const queryObjectProvider = {};
   let arrCache = [];
   if (name) {
-    if (process.env.DB_DIALECT == "mysql") {
-      queryObjectProduct.name = {
-        [Op.like]: `%${name}%`,
-      };
-    } else {
-      queryObjectProduct.name = {
-        [Op.iLike]: `%${name}%`,
-      };
-    }
+    queryObjectProduct.name = {
+      [Op.iLike]: `%${name}%`,
+    };
   }
-
   arrCache.push({ key: "name", value: name });
   if (discount === "true") {
     queryObjectProduct.discount = {
@@ -166,8 +159,16 @@ const getProducts = async (req, res) => {
     totalPages = Math.ceil(count / limit);
     data = rows;
     total = count;
-    let dataCache = JSON.stringify({ page, perPage, total, totalPages, data });
-    await Cache.create({ key: keyCache, data: dataCache });
+    if (keyCache) {
+      let dataCache = JSON.stringify({
+        page,
+        perPage,
+        total,
+        totalPages,
+        data,
+      });
+      await Cache.create({ key: keyCache, data: dataCache });
+    }
     response.totalPages = totalPages;
     response.perPage = perPage;
     response.page = page;

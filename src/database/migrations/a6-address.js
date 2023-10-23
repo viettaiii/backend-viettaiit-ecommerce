@@ -6,8 +6,8 @@ module.exports = {
       id: {
         allowNull: false,
         primaryKey: true,
-        type: Sequelize.STRING,
-        defaultValue: Sequelize.STRING,
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
       },
       phoneNumber: {
         type: Sequelize.STRING,
@@ -48,7 +48,8 @@ module.exports = {
         defaultValue: false,
       },
       userId: {
-        type: Sequelize.STRING,
+        type: Sequelize.UUID,
+  
         references: {
           model: "Users",
           key: "id",

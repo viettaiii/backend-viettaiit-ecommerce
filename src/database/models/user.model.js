@@ -36,8 +36,8 @@ module.exports = (sequelize, DataTypes) => {
       id: {
         allowNull: false,
         primaryKey: true,
-        type: DataTypes.STRING,
-        
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
       },
       name: {
         type: DataTypes.STRING,
@@ -88,6 +88,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       hooks: {
         beforeCreate: async (user, options) => {
+          user.id = uuid();
           user.password = await hashPassword(user.password);
         },
       },
