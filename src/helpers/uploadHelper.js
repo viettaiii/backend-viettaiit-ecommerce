@@ -24,13 +24,13 @@ const uploadSingleHelper = (type) => {
         return res.status(400).json({ error: "Please upload an image." });
       }
       let resize = { width: 400, height: 400 };
-      if ((type = "categories")) {
+      if (type == "categories") {
         resize = { width: 100, height: 100 };
       }
       try {
         const data = await sharp(req.file.buffer)
           .resize(resize)
-          .toFormat("png", { mozjpeg: true })
+          .toFormat("jpeg", { mozjpeg: true })
           .toBuffer();
         const stream = cloudinary.uploader.upload_stream(
           { folder: "viettaiit-ecommerce/" + type },
@@ -61,14 +61,14 @@ const uploadMultipleHelper = (type) => (req, res, next) => {
     }
     let urls = [];
     let resize = { width: 400, height: 400 };
-    if ((type = "categories")) {
+    if (type == "categories") {
       resize = { width: 100, height: 100 };
     }
     for (const file of req.files) {
       try {
         const data = await sharp(file.buffer)
           .resize(resize)
-          .toFormat("png", { mozjpeg: true })
+          .toFormat("jpeg", { mozjpeg: true })
           .toBuffer();
         const stream = cloudinary.uploader.upload_stream(
           { folder: "viettaiit-ecommerce/" + type },
