@@ -9,7 +9,7 @@ const getUsers = async (req, res) => {
   const query = {};
   if (name)
     query.name = {
-      [Op.iLike]: `%${name}%`,
+      [Op.like]: `%${name}%`,
     };
   if (email) {
     query.email = {

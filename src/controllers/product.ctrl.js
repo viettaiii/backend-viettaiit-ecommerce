@@ -38,16 +38,18 @@ const getProducts = async (req, res) => {
   let arrCache = [];
   if (name) {
     queryObjectProduct.name = {
-      [Op.iLike]: `%${name}%`,
+      [Op.like]: `%${name}%`,
     };
+    arrCache.push({ key: "name", value: name });
   }
-  arrCache.push({ key: "name", value: name });
+
   if (discount === "true") {
     queryObjectProduct.discount = {
       [Op.ne]: 0,
     };
+    arrCache.push({ key: "discount", value: discount });
   }
-  arrCache.push({ key: "discount", value: discount });
+
   if (numericFilters) {
     const regex = /\b(>|>=|=|<|<=)\b/g;
     const listFilters = numericFilters.replace(regex, (match) => `-${match}-`);
@@ -75,17 +77,19 @@ const getProducts = async (req, res) => {
       }
     });
   }
-  if (categoryId)
+  if (categoryId) {
     queryObjectCategory.id = {
       [Op.like]: `${categoryId}`,
     };
-  arrCache.push({ key: "categoryId", value: categoryId });
+    arrCache.push({ key: "categoryId", value: categoryId });
+  }
   if (providerId) {
     queryObjectProvider.id = {
       [Op.like]: `${providerId}`,
     };
+    arrCache.push({ key: "providerId", value: providerId });
   }
-  arrCache.push({ key: "providerId", value: providerId });
+
   const page = parseInt(req.query.page) || 1;
   arrCache.push({ key: "page", value: page });
   const limit = parseInt(req.query.limit) || 8;
@@ -97,8 +101,9 @@ const getProducts = async (req, res) => {
     order = [];
     if (sort.startsWith("-")) order.push([sort.slice(1), "desc"]);
     else order.push([sort, "asc"]);
+    arrCache.push({ key: "sort", value: sort + "" });
   }
-  arrCache.push({ key: "sort", value: sort + "" });
+
   let keyCache = "";
   let len = arrCache.length;
   if (len > 0) {
@@ -159,16 +164,14 @@ const getProducts = async (req, res) => {
     totalPages = Math.ceil(count / limit);
     data = rows;
     total = count;
-    if (keyCache) {
-      let dataCache = JSON.stringify({
-        page,
-        perPage,
-        total,
-        totalPages,
-        data,
-      });
-      await Cache.create({ key: keyCache, data: dataCache });
-    }
+    let dataCache = JSON.stringify({
+      page,
+      perPage,
+      total,
+      totalPages,
+      data,
+    });
+    await Cache.create({ key: keyCache, data: dataCache });
     response.totalPages = totalPages;
     response.perPage = perPage;
     response.page = page;
