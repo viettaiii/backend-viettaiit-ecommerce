@@ -88,7 +88,6 @@ module.exports = (sequelize, DataTypes) => {
     {
       hooks: {
         beforeCreate: async (user, options) => {
-          user.id = uuid();
           user.password = await hashPassword(user.password);
         },
       },
