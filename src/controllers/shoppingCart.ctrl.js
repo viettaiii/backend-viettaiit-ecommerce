@@ -12,23 +12,30 @@ const addOrUpdateCartItemMe = async (req, res) => {
       userId: userId,
     },
   });
-
-  const [shoppingCartItem, created] = await ShoppingCartItem.findOrCreate({
+  // const [shoppingCartItem, created] = await ShoppingCartItem.findOrCreate({
+  //   where: { cartId: shoppingCart.id, productItemId },
+  //   defaults: {
+  //     productItemId,
+  //     cartId: shoppingCart.id,
+  //     qty,
+  //   },
+  // });
+  const shoppingCartItem = await ShoppingCartItem.findOne({
     where: { cartId: shoppingCart.id, productItemId },
-    defaults: {
+  });
+  if (shoppingCartItem) {
+    shoppingCartItem.qty = shoppingCartItem.qty + qty;
+    await shoppingCartItem.save();
+  } else {
+    await ShoppingCartItem.create({
       productItemId,
       cartId: shoppingCart.id,
       qty,
-    },
-  });
-  if (!created) {
-    shoppingCartItem.qty = shoppingCartItem.qty + qty;
-    await shoppingCartItem.save();
+    });
   }
   const response = createResponse({
     message: "Thêm mục mới hoặc cập nhật giỏ hàng thành công",
     status: StatusCodes.OK,
-    data: shoppingCartItem,
   });
   res.status(response.status).json(response);
 };
