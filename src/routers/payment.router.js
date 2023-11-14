@@ -56,8 +56,8 @@ router.post("/", async (req, res) => {
       payment_method: "paypal",
     },
     redirect_urls: {
-      return_url: `${process.env.FRONTEND_CLIENT_URL}/thanh-toan/thanh-cong`,
-      cancel_url: `${process.env.FRONTEND_CLIENT_URL}/thanh-toan/that-bai`,
+      return_url: `https://viettai.click/thanh-toan/thanh-cong`,
+      cancel_url: `https://viettai.click/thanh-toan/that-bai`,
     },
     transactions: [
       {
