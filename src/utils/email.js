@@ -44,7 +44,7 @@ const sendMailOrderedSuccessfully = async ({ info, productItems }) => {
   const data = {
     info,
     productItems,
-    URL_FRONTEND: process.env.FRONTEND_CLIENT_URL
+    URL_FRONTEND:  "https://viettai.click/",
   };
   const html = compiledTemplate(data);
   return await sendMail({
@@ -60,7 +60,7 @@ const sendVerificationEmail = async ({
   verificationToken,
   origin,
 }) => {
-  const verifyEmail = `${origin}/tai-khoan/xac-minh-tai-khoan?token=${verificationToken}&email=${email}`;
+  const verifyEmail = `${origin}tai-khoan/xac-minh-tai-khoan?token=${verificationToken}&email=${email}`;
   const template = fs.readFileSync("src/templates/verify-email.html", "utf8");
   const compiledTemplate = handlebars.compile(template);
   const data = {
@@ -76,7 +76,7 @@ const sendVerificationEmail = async ({
 };
 
 const sendResetPasswordEmail = async ({ name, email, token, origin }) => {
-  const resetURL = `${origin}/tai-khoan/dat-lai-mat-khau?token=${token}&email=${email}`;
+  const resetURL = `${origin}tai-khoan/dat-lai-mat-khau?token=${token}&email=${email}`;
   const message = `<p>Vui lòng click vào link bên dưới để có thể đặt lại mật khẩu của bạn : 
       <a href="${resetURL}">Đặt lại mặt khẩu</a></p>`;
   return await sendMail({

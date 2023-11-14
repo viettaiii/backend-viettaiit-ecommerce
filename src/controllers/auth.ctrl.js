@@ -16,6 +16,7 @@ const {
 } = require("../utils/email");
 const { attachCookiesToResponse } = require("../utils/jwt");
 const { createResponse } = require("../utils/createResponse");
+const origin = "https://viettai.click/";
 const register = async (req, res) => {
   const { name, email, password } = req.body;
   if (!name || !email) {
@@ -61,7 +62,7 @@ const login = async (req, res) => {
     throw new UnauthorizedError("Không được phép");
   }
   if (!user.isVerified) {
-    const origin = process.env.FRONTEND_CLIENT_URL;
+  
     const verificationToken = createString();
     user.verificationToken = verificationToken;
     sendVerificationEmail({
@@ -158,7 +159,7 @@ const forgotPassword = async (req, res) => {
     name: user.name,
     email: user.email,
     token: user.passwordToken,
-    origin: process.env.FRONTEND_CLIENT_URL,
+    origin,
   });
   const response = createResponse({
     message: "Vui lòng, Kiểm tra email của bạn để đặt lại mật khẩu sau 10 phút",
