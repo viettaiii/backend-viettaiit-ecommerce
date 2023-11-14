@@ -20,11 +20,11 @@ const origin = "https://viettai.click/";
 const register = async (req, res) => {
   const { name, email, password } = req.body;
   if (!name || !email) {
-    throw new BadRequestError("Thông tin yêu cầu");
+    throw new BadRequestError("Vui lòng cung cấp thông tin!");
   }
   if (password.length < 5) {
     throw new UnprocessableEntityError(
-      "Mật khẩu là bắt buộc và phải có ít nhất 5 ký tự"
+      "Password tối thiểu 6 kí tự!"
     );
   }
   const user = await User.findOne({ where: { email } });
@@ -50,16 +50,16 @@ const login = async (req, res) => {
   }
   if (password.length < 5) {
     throw new UnprocessableEntityError(
-      "Mật khẩu là bắt buộc và phải có ít nhất 6 ký tự"
+      "Password tối thiểu 6 kí tự!"
     );
   }
   const user = await User.findOne({ where: { email } });
   if (!user) {
-    throw new NotFoundError("Không tìm thấy người dùng");
+    throw new NotFoundError("Email/password is not correct!");
   }
   const isMatch = await comparePassword(password, user.password);
   if (!isMatch) {
-    throw new UnauthorizedError("Không được phép");
+    throw new UnauthorizedError("Email/password is not correct!");
   }
   if (!user.isVerified) {
   
@@ -73,7 +73,7 @@ const login = async (req, res) => {
     });
     await user.save();
     throw new UnauthorizedError(
-      "Vui lòng kiểm tra email để xác minh tài khoản của bạn."
+      "Kiểm tra email và xác minh tải khoản trong 10 phút đến!"
     );
   }
   let userShow = {
@@ -124,14 +124,14 @@ const login = async (req, res) => {
 const verifyEmail = async (req, res) => {
   const { verificationToken, email } = req.body;
   if (!verificationToken || !email) {
-    throw new BadRequestError("Vui lòng cung cấp thông tin!!");
+    throw new BadRequestError("Vui lòng cung cấp thông tin!");
   }
   const user = await User.findOne({ where: { email } });
   if (!user) {
-    throw new NotFoundError("Không tìm thấy người dùng");
+    throw new NotFoundError("Email/password is not correct!");
   }
   if (verificationToken !== user.verificationToken) {
-    throw new ForBiddenError("Cấm");
+    throw new ForBiddenError("Xác minh thât bại!/Mã xác minh đã hết hạn");
   }
   user.isVerified = true;
   user.verifiedDate = new Date();
@@ -162,7 +162,7 @@ const forgotPassword = async (req, res) => {
     origin,
   });
   const response = createResponse({
-    message: "Vui lòng, Kiểm tra email của bạn để đặt lại mật khẩu sau 10 phút",
+    message: "Vui lòng, kiểm tra email và đặt lại mật khẩu sau 10 phút",
 
     status: StatusCodes.ACCEPTED,
   });
@@ -175,7 +175,7 @@ const resetPassword = async (req, res) => {
   }
   const user = await User.findOne({ where: { email } });
   if (!user) {
-    throw new NotFoundError("Không tìm thấy người dùng");
+    throw new NotFoundError("Email/password is not correct!");
   }
 
   const currentDate = new Date(Date.now());
@@ -185,7 +185,7 @@ const resetPassword = async (req, res) => {
       passwordToken === user.passwordToken
     )
   ) {
-    throw new UnauthorizedError("Mã không hợp lệ");
+    throw new UnauthorizedError("Mã xác minh đã hết hạn!/không đúng");
   }
 
   if (password !== confirmPassword) {

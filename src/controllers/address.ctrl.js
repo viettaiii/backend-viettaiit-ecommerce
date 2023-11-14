@@ -73,7 +73,7 @@ const updateAddressMe = async (req, res) => {
     },
   } = req;
   const address = await Address.findOne({ where: { id, userId } });
-  if (!address) throw new NotFoundError(`Không tìm thấy người dùng`);
+  if (!address) throw new NotFoundError(`Email/password is not correct!`);
   if (phoneNumber) address.phoneNumber = phoneNumber;
   if (province) address.province = province;
   if (district) address.district = district;
