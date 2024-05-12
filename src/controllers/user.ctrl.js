@@ -19,20 +19,23 @@ const getUsers = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = parseInt(req.query.limit) || 6;
   const offset = (page - 1) * limit;
-  const users = await User.findAll({
-    attributes: {
-      exclude: [
-        "role",
-        "verificationToken",
-        "password",
-        "passwordToken",
-        "passwordTokenExpire",
-      ],
-    },
-    where: query,
-    limit,
-    offset,
-  });
+  const users = await User.findAll(
+    { where: { role: "client" } },
+    {
+      attributes: {
+        exclude: [
+          "role",
+          "verificationToken",
+          "password",
+          "passwordToken",
+          "passwordTokenExpire",
+        ],
+      },
+      where: query,
+      limit,
+      offset,
+    }
+  );
 
   const count = await User.count({ where: { role: "client" } });
   const response = createResponse({
