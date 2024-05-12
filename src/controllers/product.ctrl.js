@@ -117,7 +117,7 @@ const getProducts = async (req, res) => {
       })
       .join("");
   }
-  const existingKeyCache = await Cache.findOne({ where: { key: keyCache } });
+  // const existingKeyCache = await Cache.findOne({ where: { key: keyCache } });
   let totalPages;
   let perPage;
   let total;
@@ -126,14 +126,14 @@ const getProducts = async (req, res) => {
     message: "Thành công",
     status: StatusCodes.OK,
   });
-  if (existingKeyCache) {
-    let dataCacheExist = JSON.parse(existingKeyCache.data);
-    response.totalPages = dataCacheExist.totalPages;
-    response.perPage = dataCacheExist.perPage;
-    response.page = dataCacheExist.page;
-    response.total = dataCacheExist.total;
-    response.data = dataCacheExist.data;
-  } else {
+  // if (existingKeyCache) {
+  //   let dataCacheExist = JSON.parse(existingKeyCache.data);
+  //   response.totalPages = dataCacheExist.totalPages;
+  //   response.perPage = dataCacheExist.perPage;
+  //   response.page = dataCacheExist.page;
+  //   response.total = dataCacheExist.total;
+  //   response.data = dataCacheExist.data;
+  // } else {
     const { count, rows } = await Product.findAndCountAll({
       // attributes: {
       //   include: [
@@ -166,14 +166,14 @@ const getProducts = async (req, res) => {
     totalPages = Math.ceil(count / limit);
     data = rows;
     total = count;
-    let dataCache = JSON.stringify({ page, perPage, total, totalPages, data });
-    await Cache.create({ key: keyCache, data: dataCache });
+    // let dataCache = JSON.stringify({ page, perPage, total, totalPages, data });
+    // await Cache.create({ key: keyCache, data: dataCache });
     response.totalPages = totalPages;
     response.perPage = perPage;
     response.page = page;
     response.total = total;
     response.data = data;
-  }
+  // }
   res.status(response.status).json(response);
 };
 
