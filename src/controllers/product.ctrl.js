@@ -134,45 +134,45 @@ const getProducts = async (req, res) => {
   //   response.total = dataCacheExist.total;
   //   response.data = dataCacheExist.data;
   // } else {
-    const { count, rows } = await Product.findAndCountAll({
-      // attributes: {
-      //   include: [
-      //     [
-      //       sequelize.literal(`(
-      //         SELECT SUM(qtyInStock) FROM ProductItem WHERE ProductItem.productId = Product.id
-      //       )`),
-      //       "inventoryCount",
-      //     ],
-      //   ],
-      // },
-      where: queryObjectProduct,
-      include: [
-        {
-          association: "provider",
-          attributes: { exclude: ["createdAt", "updatedAt"] },
-          where: queryObjectProvider,
-        },
-        {
-          association: "category",
-          attributes: { exclude: ["createdAt", "updatedAt"] },
+  const { count, rows } = await Product.findAndCountAll({
+    // attributes: {
+    //   include: [
+    //     [
+    //       sequelize.literal(`(
+    //         SELECT SUM(qtyInStock) FROM ProductItem WHERE ProductItem.productId = Product.id
+    //       )`),
+    //       "inventoryCount",
+    //     ],
+    //   ],
+    // },
+    where: queryObjectProduct,
+    include: [
+      {
+        association: "provider",
+        attributes: { exclude: ["createdAt", "updatedAt"] },
+        where: queryObjectProvider,
+      },
+      {
+        association: "category",
+        attributes: { exclude: ["createdAt", "updatedAt"] },
 
-          where: queryObjectCategory,
-        },
-      ],
-      order,
-      limit,
-      offset,
-    });
-    totalPages = Math.ceil(count / limit);
-    data = rows;
-    total = count;
-    // let dataCache = JSON.stringify({ page, perPage, total, totalPages, data });
-    // await Cache.create({ key: keyCache, data: dataCache });
-    response.totalPages = totalPages;
-    response.perPage = perPage;
-    response.page = page;
-    response.total = total;
-    response.data = data;
+        where: queryObjectCategory,
+      },
+    ],
+    order,
+    limit,
+    offset,
+  });
+  totalPages = Math.ceil(count / limit);
+  data = rows;
+  total = count;
+  // let dataCache = JSON.stringify({ page, perPage, total, totalPages, data });
+  // await Cache.create({ key: keyCache, data: dataCache });
+  response.totalPages = totalPages;
+  response.perPage = perPage;
+  response.page = page;
+  response.total = total;
+  response.data = data;
   // }
   res.status(response.status).json(response);
 };
@@ -292,6 +292,8 @@ const updateProduct = async (req, res) => {
       productItemExist.image = productItem.image;
       productItemExist.isSpecial = productItem.isSpecial;
       productItemExist.colorId = productItem.colorId;
+
+      console.log("productItemExist", productItemExist);
       await productItemExist.save();
     } else {
       await ProductItem.create({
