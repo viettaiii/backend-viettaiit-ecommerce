@@ -64,8 +64,8 @@ router.get(
 router.get(
   "/google/callback",
   passport.authenticate("google", {
-    successRedirect: "https://viettai.click/login/success",
-    failureRedirect: "https://viettai.click/login/failure",
+    successRedirect: "http://localhost:8080/login/success",
+    failureRedirect: "http://localhost:8080/login/failure",
   })
 );
 
@@ -80,8 +80,8 @@ router.get(
 router.get(
   "/facebook/callback",
   passport.authenticate("facebook", {
-    successRedirect: "https://viettai.click/login/success",
-    failureRedirect: "https://viettai.click/login/failure",
+    successRedirect: "http://localhost:8080/login/success",
+    failureRedirect: "http://localhost:8080/login/failure",
   })
 );
 
@@ -94,8 +94,8 @@ router.get(
 router.get(
   "/github/callback",
   passport.authenticate("github", {
-    successRedirect: "https://viettai.click/login/success",
-    failureRedirect: "https://viettai.click/login/failure",
+    successRedirect: "http://localhost:8080/login/success",
+    failureRedirect: "http://localhost:8080/login/failure",
   })
 );
 

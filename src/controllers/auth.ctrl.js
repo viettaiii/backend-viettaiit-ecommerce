@@ -16,16 +16,14 @@ const {
 } = require("../utils/email");
 const { attachCookiesToResponse } = require("../utils/jwt");
 const { createResponse } = require("../utils/createResponse");
-const origin = "https://viettai.click/";
+const origin = "http://localhost:8080/";
 const register = async (req, res) => {
   const { name, email, password } = req.body;
   if (!name || !email) {
     throw new BadRequestError("Vui lòng cung cấp thông tin!");
   }
   if (password.length < 5) {
-    throw new UnprocessableEntityError(
-      "Password tối thiểu 6 kí tự!"
-    );
+    throw new UnprocessableEntityError("Password tối thiểu 6 kí tự!");
   }
   const user = await User.findOne({ where: { email } });
   if (user) {
@@ -49,9 +47,7 @@ const login = async (req, res) => {
     throw new BadRequestError("Vui lòng cung cấp thông tin!");
   }
   if (password.length < 5) {
-    throw new UnprocessableEntityError(
-      "Password tối thiểu 6 kí tự!"
-    );
+    throw new UnprocessableEntityError("Password tối thiểu 6 kí tự!");
   }
   const user = await User.findOne({ where: { email } });
   if (!user) {
@@ -62,7 +58,6 @@ const login = async (req, res) => {
     throw new UnauthorizedError("Email/password is not correct!");
   }
   if (!user.isVerified) {
-  
     const verificationToken = createString();
     user.verificationToken = verificationToken;
     sendVerificationEmail({

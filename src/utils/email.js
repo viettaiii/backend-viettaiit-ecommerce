@@ -44,7 +44,7 @@ const sendMailOrderedSuccessfully = async ({ info, productItems }) => {
   const data = {
     info,
     productItems,
-    URL_FRONTEND:  "https://viettai.click/",
+    URL_FRONTEND: "http://localhost:8080/",
   };
   const html = compiledTemplate(data);
   return await sendMail({
